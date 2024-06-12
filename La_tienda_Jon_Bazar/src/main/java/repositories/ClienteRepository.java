@@ -92,35 +92,43 @@ public class ClienteRepository {
                     }
 
                 } catch (TipoPasswordIcorrecto e) {
-                    System.out.println(e.getMessage());
+                    System.err.println(e.getMessage());
                 }
             } while (password == null);
             statement = connection.createStatement();
-/*
+
             String query = String.format("INSERT INTO %s " +
                             "(%s,%s,%s) " +
-                            "VALUES (%s,%s,%s);",
+                            "VALUES ('%s','%s','%s');",
                     EsquemaDB.TAB_CLIENTES,
                     EsquemaDB.COL_NOMBRE, EsquemaDB.COL_CORREO, EsquemaDB.COL_PASSWORD,
                     nombre, correo, password);
-            statement.executeUpdate(query);
-            statement.close();
-*/
+            //IMPORTANTE meterle comillas a las banderas
 
+            // para sacar filas afectadas se crea la variable, la QUERY se ejecuta al mismo tiempo que se guarda
+            int filasAfectadas = statement.executeUpdate(query);
+            //statement.executeUpdate(query);
+            statement.close();
+            if (filasAfectadas>0) {
+                System.out.println("Cliente registrado con exito");
+            }else{
+                System.err.println("Cliente no se ha registrado");
+            }
+
+/*
             String query = "INSERT INTO clientes (nombre, correo, password) VALUES ('" + nombre + "', '" + correo + "' ,'" + password + "');";
             statement.executeUpdate(query);
             statement.close();
-
+*/
 
 
         } catch (SQLException e) {
             System.err.println("Fallo en la sentencia SQL");
             System.out.println(e.getMessage());
-        }finally {
+        } finally {
             //cerramos
             DBConnection.closeConnection();
         }
-
 
 
     }

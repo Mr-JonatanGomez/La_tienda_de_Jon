@@ -1,4 +1,5 @@
 import database.DBConnection;
+import menu.Menu_Inicio_App;
 import model.Cliente;
 import repositories.ClienteRepository;
 
@@ -18,8 +19,10 @@ public class Main {
             System.err.println("Error ejecucion conexion en Main");
         }*/
 
+        Menu_Inicio_App menu = new Menu_Inicio_App();
         ClienteRepository clienteRepository = new ClienteRepository();
-        clienteRepository.registrarClienteNuevo();
+        //clienteRepository.registrarClienteNuevo();
 
+        menu.menuInicial();
     }
 }
