@@ -7,6 +7,7 @@ import exceptions.TipoCorreoIncorrecto;
 import exceptions.TipoPasswordIcorrecto;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
@@ -62,6 +63,7 @@ public class ClienteRepository {
                         correo = null;
                         throw new TipoCorreoIncorrecto("El nombre  debe contener @ y .com o .es");
                     }
+
                 } catch (TipoCorreoIncorrecto e) {
                     System.out.println(e.getMessage());
                 }
@@ -95,26 +97,29 @@ public class ClienteRepository {
                     System.err.println(e.getMessage());
                 }
             } while (password == null);
-            statement = connection.createStatement();
 
-            String query = String.format("INSERT INTO %s " +
-                            "(%s,%s,%s) " +
-                            "VALUES ('%s','%s','%s');",
-                    EsquemaDB.TAB_CLIENTES,
-                    EsquemaDB.COL_NOMBRE, EsquemaDB.COL_CORREO, EsquemaDB.COL_PASSWORD,
-                    nombre, correo, password);
-            //IMPORTANTE meterle comillas a las banderas
 
-            // para sacar filas afectadas se crea la variable, la QUERY se ejecuta al mismo tiempo que se guarda
-            int filasAfectadas = statement.executeUpdate(query);
-            //statement.executeUpdate(query);
-            statement.close();
-            if (filasAfectadas>0) {
-                System.out.println("Cliente registrado con exito");
-            }else{
-                System.err.println("Cliente no se ha registrado");
+            if (!usuarioExiste(correo)) {// comprobamos si NO existe correo, ejecutamos query
+                statement = connection.createStatement();
+
+                String query = String.format("INSERT INTO %s " +
+                                "(%s,%s,%s) " +
+                                "VALUES ('%s','%s','%s');",
+                        EsquemaDB.TAB_CLIENTES,
+                        EsquemaDB.COL_NOMBRE, EsquemaDB.COL_CORREO, EsquemaDB.COL_PASSWORD,
+                        nombre, correo, password);
+                //IMPORTANTE meterle comillas a las banderas
+
+                // para sacar filas afectadas se crea la variable, la QUERY se ejecuta al mismo tiempo que se guarda
+                int filasAfectadas = statement.executeUpdate(query);
+                //statement.executeUpdate(query);
+                statement.close();
+                if (filasAfectadas > 0) {
+                    System.out.println("Cliente registrado con exito");
+                } else {
+                    System.err.println("Cliente no se ha registrado");
+                }
             }
-
 /*
             String query = "INSERT INTO clientes (nombre, correo, password) VALUES ('" + nombre + "', '" + correo + "' ,'" + password + "');";
             statement.executeUpdate(query);
@@ -131,6 +136,37 @@ public class ClienteRepository {
         }
 
 
+    }
+
+    public boolean usuarioExiste(String correo) {
+        boolean existe = false;
+
+        connection = DBConnection.getConnection();
+        Statement statement = null;
+        ResultSet resultSet = null;
+        String query = String.format("SELECT %s FROM %s", EsquemaDB.COL_CORREO, EsquemaDB.TAB_CLIENTES);
+
+        try {
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(query);
+
+            while (resultSet.next()) {
+                if (resultSet.getString("correo").equalsIgnoreCase(correo)) {
+                    existe = true;
+                    System.err.println("El correo, ya existe en la database");
+                    break;
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println("error SQL");
+        }
+
+
+        return existe;
+    }
+
+    public void iniciarSesion() {
     }
 
 }
