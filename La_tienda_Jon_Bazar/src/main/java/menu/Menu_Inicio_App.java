@@ -47,7 +47,7 @@ public class Menu_Inicio_App {
                             break;
                         }
 
-                    } while (contadorDeVecesCorreo < 4||clienteRepository.correoExisteDB(correoInicio));
+                    } while (contadorDeVecesCorreo < 4 || clienteRepository.correoExisteDB(correoInicio));
 
 
                     if (clienteRepository.correoExisteDB(correoInicio)) {
@@ -59,12 +59,14 @@ public class Menu_Inicio_App {
                             passwordInicio = sc.next();
                             if (clienteRepository.verificarPasswordParaInicio(correoInicio, passwordInicio)) {
                                 System.out.println("🏪ESTAS DENTRO DEL MENÚ, AHORA CREA EL MENÚ DE LA TIENDA Y LA TIENDA HUEVON🏪");
+                                // TODO: 17/06/2024 AQUI LLEVAR AL MENÚ DE TIENDA...comprar y demas
+                                break;
                             } else {
                                 contadorDeVecesPass--;
                                 System.err.println("El password no coincide con la base de datos");
                                 System.out.println("Te quedan " + contadorDeVecesPass + " intentos");
                             }
-                        } while (contadorDeVecesPass > 0 ||clienteRepository.verificarPasswordParaInicio(correoInicio, passwordInicio));
+                        } while (contadorDeVecesPass > 0 || !clienteRepository.verificarPasswordParaInicio(correoInicio, passwordInicio));
 
 
                     }
