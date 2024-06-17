@@ -21,8 +21,21 @@ public class Main {
 
         Menu_Inicio_App menu = new Menu_Inicio_App();
         ClienteRepository clienteRepository = new ClienteRepository();
+        menu.menuInicial();//
         //clienteRepository.registrarClienteNuevo();
 
-        menu.menuInicial();
+        //clienteRepository.cifradoPassword("jonatan25gomez");
+
+        //clienteRepository.verificarPasswordParaInicio("Hashing@Password1.com","Abcd1234");
+        /*
+        ProbandoHash
+
+        Hashing@Password.com
+
+        Abcd1234
+
+        */
+        
+
     }
 }
