@@ -15,7 +15,7 @@ public class Menu_Inicio_App {
         //PARTE INICIO SESION NO ACTIVA HASTA QUE HAGA EL RESSULT SET
         do {
             System.out.println("""
-                    MENU DE INICIO
+                    MENU DE INICIO2
                                     
                     1- INICIAR SESIÓN
                     2- REGISTRARSE
