@@ -81,7 +81,7 @@ public class ExtraccionProductosJSON {
             try {
                 bufferedReader.close();
             } catch (IOException e) {
-                System.err.println("Error cerrado de buffered");
+                System.err.println("Error cerrado de bufferedReader");
             }
         }
     }
