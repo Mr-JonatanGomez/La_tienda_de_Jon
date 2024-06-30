@@ -77,6 +77,12 @@ public class ExtraccionProductosJSON {
             System.err.println("Error en la codificacion de la URL");
         } catch (IOException e) {
             System.err.println("Error de conexion Internet");
+        }finally {
+            try {
+                bufferedReader.close();
+            } catch (IOException e) {
+                System.err.println("Error cerrado de buffered");
+            }
         }
     }
 
