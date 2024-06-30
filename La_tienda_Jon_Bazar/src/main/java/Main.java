@@ -1,4 +1,5 @@
 import database.DBConnection;
+import json.ExtraccionProductosJSON;
 import menu.Menu_Inicio_App;
 import model.Cliente;
 import repositories.ClienteRepository;
@@ -21,6 +22,7 @@ public class Main {
 
         Menu_Inicio_App menu = new Menu_Inicio_App();
         ClienteRepository clienteRepository = new ClienteRepository();
+        ExtraccionProductosJSON extraccionProductosJSON=new ExtraccionProductosJSON();
         menu.menuInicial();//
         //clienteRepository.registrarClienteNuevo();
 
