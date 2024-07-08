@@ -1,13 +1,13 @@
 package menu;
 
-import json.ExtraccionProductosJSON;
+import repositories.ExtraccionProductosJSON;
 import repositories.ClienteRepository;
 
 import java.util.Scanner;
 
 public class Menu_Inicio_App {
     ClienteRepository clienteRepository = new ClienteRepository();
-    ExtraccionProductosJSON extraccionProductosJSON =new ExtraccionProductosJSON();
+    ExtraccionProductosJSON extraccionProductosJSON = new ExtraccionProductosJSON();
     Scanner sc = new Scanner(System.in);
 
     public void menuInicial() {
@@ -21,7 +21,7 @@ public class Menu_Inicio_App {
                                     
                     1- INICIAR SESIÓN
                     2- REGISTRARSE
-                    3- SOLO PARA PRUEBA MOSTRAR PRODUCTOS JSON
+                    3- SOLO PARA PRUEBA MOSTRAR PRODUCTOS JSON desde un arrayList
                                     
                     0- SALIR
                     """);
@@ -81,7 +81,7 @@ public class Menu_Inicio_App {
 
                 case 3:
 
-extraccionProductosJSON.crearProductsYLeerlosENArrayDeJava();
+                    extraccionProductosJSON.crearProductsYLeerlosENArrayDeJava();
 
                     break;
                 case 0:

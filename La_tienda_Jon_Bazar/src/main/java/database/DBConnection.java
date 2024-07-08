@@ -18,7 +18,7 @@ public class DBConnection {
         //3 la conex = a la carga del DRIVER
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            String uri = "jdbc:mysql://127.0.0.1:3306/tienda_jon";
+            String uri = "jdbc:mysql://127.0.0.1:3306/bazar_jon";
             connection = DriverManager.getConnection(uri,"root","");
         } catch (ClassNotFoundException e) {
             System.err.println("No has descargado el driver");

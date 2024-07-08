@@ -1,11 +1,6 @@
-import database.DBConnection;
-import json.ExtraccionProductosJSON;
+import repositories.ExtraccionProductosJSON;
 import menu.Menu_Inicio_App;
-import model.Cliente;
 import repositories.ClienteRepository;
-
-import java.sql.Connection;
-import java.sql.SQLException;
 
 public class Main {
     public static void main(String[] args) {
@@ -21,8 +16,14 @@ public class Main {
         }*/
 
         Menu_Inicio_App menu = new Menu_Inicio_App();
+
         ClienteRepository clienteRepository = new ClienteRepository();
+
         ExtraccionProductosJSON extraccionProductosJSON=new ExtraccionProductosJSON();
+        // esto solo si esta vacio los productos en la database
+        extraccionProductosJSON.agregarProductosEnDatabaseSinComprobarSiYaHayProductosChatGPT();
+
+
         menu.menuInicial();//
         //clienteRepository.registrarClienteNuevo();
 

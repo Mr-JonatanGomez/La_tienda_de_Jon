@@ -17,9 +17,10 @@ import java.sql.Statement;
 import java.util.Scanner;
 
 public class ClienteRepository {
+    Scanner sc = new Scanner(System.in);
+
     //necesitamos la conexion, asique se crea como private, se abre, trabaja y se cierra
     private Connection connection;
-    Scanner sc = new Scanner(System.in);
 
     //METODO PARA CIFRADO CON BCRYPT
     private String hashPassword(String password) {
@@ -236,87 +237,7 @@ public class ClienteRepository {
         return false;
     }
 
-    public void leerUseryDescifrarPass(){//NO FUNCIONA DEJAR AL FINAL EL PASS
-        connection=DBConnection.getConnection();
-String query = String.format("SELECT %s,%s FROM %s",EsquemaDB.COL_CORREO,EsquemaDB.COL_PASSWORD,
-        EsquemaDB.TAB_CLIENTES);
-        try {
-            Statement statement= connection.createStatement();
-            ResultSet resultSet= statement.executeQuery(query);
-
-            while(resultSet.next()){
-                String correoLeido = resultSet.getString(EsquemaDB.COL_CORREO);
-                String passLeida = resultSet.getString(EsquemaDB.COL_CORREO);
-
-                System.out.println("correo: "+correoLeido);
-                System.out.println("passCod: "+passLeida);
-                String passNormal=null;
-                for (int i = 0; i < passLeida.length(); i++) {
-                    passNormal+= passLeida.charAt(i)/87;
-                }
-                System.out.println("La pas normal es: "+passNormal);
-            }
-
-        } catch (SQLException e) {
-            System.err.println("Error LECTURA SQL");
-        }
-    }
-    public void cifradoPassword(String password){
-        /*multiplicando por 87
-        String cifrado= "";
-        for (int i = 0; i < password.length(); i++) {
-            cifrado += i * 87;
-        }
-        System.out.println("password "+password);
-        System.out.println("cifrado "+cifrado);
-        */
-        File file = new File("src/main/resources/cifrado.txt");
-        FileWriter fileWriter=null;
-
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                System.err.println("Fallo al crear el file");
-            }
-        } else {
-            try {
-                file.delete();
-                file.createNewFile();
-            } catch (IOException e) {
-                System.err.println("Fallo al crear el file");
-            }
-        }
-
-
-        try {
-            fileWriter= new FileWriter(file);
-            for (int i = 0; i < password.length(); i++) {
-                fileWriter.write(password.charAt(i)*2);
-            }
-
-        } catch (IOException e) {
-            System.err.println("Error al escribir cifrado");
-        } finally {
-            try {
-                assert fileWriter != null;
-                fileWriter.close();
-            } catch (IOException e) {
-                System.err.println("Error de cerrado");
-            }
-        }
-
-
-    }
-    public void descifradoPassword(String password){
-//PRIMERO HACER EL READ
-        /*File file = new File("src/main/resources/descifrado.txt");
-        FileReader fileReader=null;
-*/
 
 
 
-
-
-    }
 }
