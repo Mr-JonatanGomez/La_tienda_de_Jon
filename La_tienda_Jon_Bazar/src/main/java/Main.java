@@ -18,10 +18,10 @@ public class Main {
         Menu_Inicio_App menu = new Menu_Inicio_App();
 
         ClienteRepository clienteRepository = new ClienteRepository();
-
         ExtraccionProductosJSON extraccionProductosJSON=new ExtraccionProductosJSON();
-        // esto solo si esta vacio los productos en la database
-        extraccionProductosJSON.agregarProductosEnDatabaseSinComprobarSiYaHayProductosChatGPT();
+
+        // esto agrega los productos si no hay ya en la database
+        extraccionProductosJSON.agregarProductosEnDatabase();
 
 
         menu.menuInicial();//

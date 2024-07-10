@@ -210,90 +210,45 @@ public class ExtraccionProductosJSON {
 
         if (!comprobarSiHayProductosEnDatabase()) {
             crearProductsYLeerlosENArrayDeJava();
-
             connection = DBConnection.getConnection();
-            Statement statement = null;
+            PreparedStatement preparedStatement = null;
+
+            String query = "INSERT INTO " + EsquemaDB.TAB_PRODUCTOS + " (" +
+                    EsquemaDB.COL_NOMBRE + "," +
+                    EsquemaDB.COL_CATEGORIA + "," +
+                    EsquemaDB.COL_PRICE + "," +
+                    EsquemaDB.COL_DESCRIPCION + ") VALUES (?, ?, ?, ?)";
 
 
-            for (Producto item : listadoProductos) {
-                if (item != null) {
-                    //
-                    try {
-                        statement = connection.createStatement();
-                        String query = String.format("INSERT INTO %s (%s,%s,%s,%s) VALUES ('%s','%s',%s,'%s')",
-                                EsquemaDB.TAB_PRODUCTOS,
-                                EsquemaDB.COL_NOMBRE, EsquemaDB.COL_CATEGORIA, EsquemaDB.COL_PRICE, EsquemaDB.COL_DESCRIPCION,
-                                item.getNombre(), item.getCategoria(), item.getPrecio(), item.getDescripcion());
+            try {
 
+                preparedStatement = connection.prepareStatement(query);
 
-                        statement.executeUpdate(query);
+                for (Producto item : listadoProductos) {
+                    if (item != null) {
+                        preparedStatement.setString(1, item.getNombre());
+                        preparedStatement.setString(2, item.getCategoria());
+                        preparedStatement.setDouble(3, item.getPrecio());
+                        preparedStatement.setString(4, item.getDescripcion());
 
-                        System.out.println(item.getNombre());
-
-                        //
-                    } catch (SQLException e) {
-                        System.err.println("Fallo en la sentencia SQL en JSON");
-                        System.out.println(e.getMessage());
-                    } finally {
-                        try {
-                            statement.close();
-                            connection.close();
-                        } catch (SQLException e) {
-                            System.err.println("Error de cerrado de StatmentJSON");
-                        }
+                        preparedStatement.executeUpdate();//confirmacion
                     }
                 }
-            }
-
-
-        }
-
-        // RESTO CODIGO
-    }
-
-    public void agregarProductosEnDatabaseSinComprobarSiYaHayProductosChatGPT() {
-
-
-        //primero se comprueba si hay productos
-
-
-        crearProductsYLeerlosENArrayDeJava();
-        connection = DBConnection.getConnection();
-        PreparedStatement preparedStatement = null;
-
-        String query = "INSERT INTO " + EsquemaDB.TAB_PRODUCTOS + " (" +
-                EsquemaDB.COL_NOMBRE + "," +
-                EsquemaDB.COL_CATEGORIA + "," +
-                EsquemaDB.COL_PRICE + "," +
-                EsquemaDB.COL_DESCRIPCION + ") VALUES (?, ?, ?, ?)";
-
-
-
-        try {
-
-            preparedStatement = connection.prepareStatement(query);
-
-            for (Producto item : listadoProductos) {
-                if (item != null) {
-                    preparedStatement.setString(1, item.getNombre());
-                    preparedStatement.setString(2, item.getCategoria());
-                    preparedStatement.setDouble(3, item.getPrecio());
-                    preparedStatement.setString(4, item.getDescripcion());
-
-                    preparedStatement.executeUpdate();//confirmacion
+            } catch (SQLException e) {
+                System.err.println("Fallo en la sentencia SQL en JSON");
+                System.out.println(e.getMessage());
+            } finally {
+                try {
+                    preparedStatement.close();
+                    connection.close();
+                } catch (SQLException e) {
+                    System.err.println("Error de cerrado de StatmentJSON o Connect");
                 }
             }
-        } catch (SQLException e) {
-            System.err.println("Fallo en la sentencia SQL en JSON");
-            System.out.println(e.getMessage());
-        } finally {
-            try {
-                preparedStatement.close();
-                connection.close();
-            } catch (SQLException e) {
-                System.err.println("Error de cerrado de StatmentJSON o Connect");
-            }
+
         }
+
+
 
     }
 

@@ -193,7 +193,8 @@ public class ClienteRepository {
             }
 
         } catch (SQLException e) {
-            System.err.println("error SQL");
+            System.err.println("error SQL Cliente");
+            System.out.println(e.getMessage());
         }
 
 
