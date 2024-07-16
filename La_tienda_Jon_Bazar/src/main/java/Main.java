@@ -20,7 +20,7 @@ public class Main {
         ClienteRepository clienteRepository = new ClienteRepository();
         ExtraccionProductosJSON extraccionProductosJSON=new ExtraccionProductosJSON();
 
-        // esto agrega los productos si no hay ya en la database
+        // esto agrega los productos del JSON si no hay productos en la database
         extraccionProductosJSON.agregarProductosEnDatabase();
 
 
@@ -30,14 +30,7 @@ public class Main {
         //clienteRepository.cifradoPassword("jonatan25gomez");
 
         //clienteRepository.verificarPasswordParaInicio("Hashing@Password1.com","Abcd1234");
-        /*
-        ProbandoHash
 
-        Hashing@Password.com
-
-        Abcd1234
-
-        */
         
 
     }

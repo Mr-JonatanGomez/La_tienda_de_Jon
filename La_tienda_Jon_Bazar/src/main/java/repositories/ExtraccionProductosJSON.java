@@ -34,13 +34,19 @@ public class ExtraccionProductosJSON {
 
     private ArrayList<Producto> listadoProductos;
 
-
+    //posible para eliminar
+    /*
     public ExtraccionProductosJSON(URL url, ArrayList<Producto> listadoProductos) {
         this.url = url;
         this.listadoProductos = new ArrayList<>();
     }
+    */
 
     public void crearProductsYLeerlosENArrayDeJava() {
+        /*
+        This method copy the products from DummyJson to
+        ArrayList with the necesary atributes for my program
+        */
         BufferedReader bufferedReader = null;
         listadoProductos = new ArrayList<>();
         try {
@@ -91,67 +97,6 @@ public class ExtraccionProductosJSON {
                 System.err.println("Error cerrado de bufferedReader");
             }
         }
-    }
-
-    public void crearProductsYLeerlosENArrayDeJava2() {
-
-        if (!comprobarSiHayProductosEnDatabase()) {
-
-            connection = DBConnection.getConnection();
-            Statement statement = null;
-
-            BufferedReader bufferedReader = null;
-            listadoProductos = new ArrayList<>();
-            try {
-
-                //1 URL
-                url = new URL("https://dummyjson.com/products");
-                //2 HTTPConnection casteado (HttpURLConnection)
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                //3Leemos la contestacion desde fuera
-                bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-                String productosJSON = bufferedReader.readLine();
-
-                //4 PAsar a JSON
-                JSONObject respuestaJSONProducts = new JSONObject(productosJSON);
-                JSONArray productos = respuestaJSONProducts.getJSONArray("products");
-
-                //5 Recorremos array para sacar la info y crear los productos
-
-                for (int i = 0; i < productos.length(); i++) {
-                    JSONObject producto = productos.getJSONObject(i);//indice i
-                    int id = producto.getInt("id");
-                    String nombre = producto.getString("title");
-                    String categoria = producto.getString("category");
-                    double precio = producto.getDouble("price");
-                    String descripcion = producto.getString("description");
-
-
-                    Producto productoParaCrear = new Producto(id, nombre, categoria, precio, descripcion);
-                    listadoProductos.add(productoParaCrear);
-                }
-
-
-//MOSTRANDO DATOS
-                for (Producto item : listadoProductos) {
-                    item.mostrarDatos();
-                    System.out.println();
-                }
-
-            } catch (MalformedURLException e) {
-                System.err.println("Error en la codificacion de la URL");
-            } catch (IOException e) {
-                System.err.println("Error de conexion Internet");
-            } finally {
-                try {
-                    bufferedReader.close();
-                } catch (IOException e) {
-                    System.err.println("Error cerrado de bufferedReader");
-                }
-            }
-        }
-
     }
 
 
