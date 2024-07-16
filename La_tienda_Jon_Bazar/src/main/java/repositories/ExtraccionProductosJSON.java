@@ -101,6 +101,10 @@ public class ExtraccionProductosJSON {
 
 
     public boolean comprobarSiHayProductosEnDatabase() {
+        /*
+        This method verify the products on database, if exists products on database,
+        in afirmative case to be diferent to null, return resultado
+        */
         boolean resultado = false;
 
         connection = DBConnection.getConnection();
@@ -123,6 +127,7 @@ public class ExtraccionProductosJSON {
             }
 */
             if (resultSet.next()) {
+                // si hay proximo, resultado = numProductos mayor que 0
                 int numeroProductos = resultSet.getInt("totalProductos");
                 resultado = numeroProductos > 0;
                 //System.out.println(resultSet.getInt("totalProductos"));
