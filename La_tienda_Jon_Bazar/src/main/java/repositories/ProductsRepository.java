@@ -21,7 +21,7 @@ import java.util.ArrayList;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ExtraccionProductosJSON {
+public class ProductsRepository {
     /*
     1- necesitamos URL
     2- un HTTPConnection
@@ -166,7 +166,7 @@ public class ExtraccionProductosJSON {
             String query = "INSERT INTO " + EsquemaDB.TAB_PRODUCTOS + " (" +
                     EsquemaDB.COL_NOMBRE + "," +
                     EsquemaDB.COL_CATEGORIA + "," +
-                    EsquemaDB.COL_PRICE + "," +
+                    EsquemaDB.COL_PRECIO + "," +
                     EsquemaDB.COL_DESCRIPCION + ") VALUES (?, ?, ?, ?)";
 
 
@@ -199,6 +199,42 @@ public class ExtraccionProductosJSON {
         }
 
 
+    }
+
+    public void mostrarProductosTienda() {
+        connection = DBConnection.getConnection();
+
+        Statement statement = null;
+        ResultSet resultSet = null;
+
+        String query = String.format("SELECT %s, %s, %s,%s FROM %s",
+                EsquemaDB.COL_ID_PRODUCTO, EsquemaDB.COL_NOMBRE, EsquemaDB.COL_PRECIO, EsquemaDB.COL_DESCRIPCION, EsquemaDB.TAB_PRODUCTOS);
+
+        try {
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(query);
+
+            System.out.println("\nLISTADO DE PRODUCTOS DEL JON BAZAR 🏢\n");
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id_producto");
+                String nombre = resultSet.getString("nombre");
+                double precio = resultSet.getDouble("precio");
+                String descripcion = resultSet.getString("descripcion");
+
+                Producto producto = new Producto(id, nombre, precio, descripcion);
+                producto.mostrarDatos2();
+                System.out.println();
+
+            }
+        } catch (SQLException e) {
+            System.err.println("Error SQL al leer productos");
+            System.out.println(e.getMessage());
+        } finally {
+            DBConnection.closeConnection();
+            connection = null;
+        }
+
 
     }
 
@@ -224,7 +260,7 @@ public class ExtraccionProductosJSON {
                         statement = connection.createStatement();
                         String query = String.format("INSERT INTO %s (%s,%s,%s,%s) VALUES ('%s','%s',%s,'%s')",
                                 EsquemaDB.TAB_PRODUCTOS,
-                                EsquemaDB.COL_NOMBRE, EsquemaDB.COL_CATEGORIA, EsquemaDB.COL_PRICE, EsquemaDB.COL_DESCRIPCION,
+                                EsquemaDB.COL_NOMBRE, EsquemaDB.COL_CATEGORIA, EsquemaDB.COL_PRECIO, EsquemaDB.COL_DESCRIPCION,
                                 item.getNombre(), item.getCategoria(), item.getPrecio(), item.getDescripcion());
 
 

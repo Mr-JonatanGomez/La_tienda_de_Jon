@@ -1,4 +1,4 @@
-import repositories.ExtraccionProductosJSON;
+import repositories.ProductsRepository;
 import menu.Menu_Inicio_App;
 import repositories.ClienteRepository;
 
@@ -18,10 +18,10 @@ public class Main {
         Menu_Inicio_App menu = new Menu_Inicio_App();
 
         ClienteRepository clienteRepository = new ClienteRepository();
-        ExtraccionProductosJSON extraccionProductosJSON=new ExtraccionProductosJSON();
+        ProductsRepository productsRepository =new ProductsRepository();
 
         // esto agrega los productos del JSON si no hay productos en la database
-        extraccionProductosJSON.agregarProductosEnDatabase();
+        productsRepository.agregarProductosEnDatabase();
 
 
         menu.menuInicial();//

@@ -23,6 +23,13 @@ public class Producto {
         this.descripcion = descripcion;
     }
 
+    public Producto(int id, String nombre, double precio, String descripcion) {
+        this.id = id;
+        this.nombre = nombre;
+        this.precio = precio;
+        this.descripcion = descripcion;
+    }
+
     public void mostrarDatos(){
         System.out.println("id = " + id);
         System.out.println("nombre = " + nombre);
@@ -30,4 +37,12 @@ public class Producto {
         System.out.println("precio = " + precio);
         System.out.println("descripcion = " + descripcion);
     }
+
+    public void mostrarDatos2(){
+        System.out.println("id = " + id);
+        System.out.println("nombre = " + nombre);
+        System.out.println("precio = " + precio);
+        System.out.println("descripcion = " + descripcion);
+    }
+
 }

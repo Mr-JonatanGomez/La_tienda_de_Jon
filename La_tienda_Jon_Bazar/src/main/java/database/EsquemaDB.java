@@ -13,11 +13,11 @@ public interface EsquemaDB {
     String COL_NOMBRE = "nombre";
     String COL_CORREO = "correo";
     String COL_PASSWORD = "password";
-    String COL_PRICE = "precio";
+    String COL_PRECIO = "precio";
 
         String COL_CATEGORIA = "categoria";
         String COL_ID_PRODUCTO = "id_producto";
-        String COLPRECIO = "precio";
+
         String COL_STOCK = "stock";
         String COL_DESCRIPCION = "descripcion";
         String COL_ID_DETALLE = "id_detalle";
