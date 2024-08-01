@@ -45,7 +45,8 @@ public class ProductsRepository {
     public void crearProductsYLeerlosENArrayDeJava() {
         /*
         This method copy the products from DummyJson to
-        ArrayList with the necesary atributes for my program
+        ArrayList with the necesary atributes for my program,
+        if dummyJson disapear, i'll have save info in ArrayList
         */
         BufferedReader bufferedReader = null;
         listadoProductos = new ArrayList<>();
@@ -156,7 +157,7 @@ public class ProductsRepository {
     public void agregarProductosEnDatabase() {
 
 
-        //primero se comprueba si hay productos
+        //primero se comprueba si hay productos en Database con el metodo anterior
 
         if (!comprobarSiHayProductosEnDatabase()) {
             crearProductsYLeerlosENArrayDeJava();
@@ -176,6 +177,7 @@ public class ProductsRepository {
 
                 for (Producto item : listadoProductos) {
                     if (item != null) {
+                        // se podria hacer con sacando el valor de la clave en json, quizas
                         preparedStatement.setString(1, item.getNombre());
                         preparedStatement.setString(2, item.getCategoria());
                         preparedStatement.setDouble(3, item.getPrecio());
