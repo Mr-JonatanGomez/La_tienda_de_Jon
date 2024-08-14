@@ -112,6 +112,31 @@ public class Menu_Inicio_App {
 
 
     public void menuAdmin(){
-        if
+        int opcion = -1;
+
+
+        System.out.println("""
+                MENU DE ADMINISTRADOR
+                1-AGREGAR PRODUCTO
+                2-MODIFICAR PRODUCTO
+                3-ELIMINAR PRODUCTO
+                """);
+
+        switch (opcion){
+            case 1:
+                productsRepository.agregarNuevoProductoADatabase();
+                break;
+            case 2:
+
+                break;
+            case 3:
+
+                break;
+            case 0:
+
+                break;
+            default:
+                System.out.println("opcion no contemplada");
+        }
     }
 }

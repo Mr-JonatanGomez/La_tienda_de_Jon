@@ -17,6 +17,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 @Getter
 @Setter
@@ -240,57 +241,59 @@ public class ProductsRepository {
 
     }
 
-    public void agregarProductosEnDatabaseSinComprobarSiYaHayProductosORIGIN() {
+    public void agregarNuevoProductoADatabase() {
 
+        System.out.println("Agregando nuevo producto a DataBase");
 
-        //primero se comprueba si hay productos
-
-
-        crearProductsYLeerlosENArrayDeJava();
         connection = DBConnection.getConnection();
-        Statement statement = null;
+        PreparedStatement preparedStatement = null;
+
+        String query = "INSERT INTO " + EsquemaDB.TAB_PRODUCTOS + " (" +
+                EsquemaDB.COL_NOMBRE + "," +
+                EsquemaDB.COL_CATEGORIA + "," +
+                EsquemaDB.COL_PRECIO + "," +
+                EsquemaDB.COL_DESCRIPCION + ") VALUES (?, ?, ?, ?)";
+
 
         try {
 
+            preparedStatement = connection.prepareStatement(query);
 
-            for (Producto item : listadoProductos) {
-                if (item != null) {
+            Scanner sc = new Scanner(System.in);
+
+            System.out.println("Introduce nombre del producto");
+            String nombre = sc.next();
+            System.out.println("Introduce categoria del producto");
+            String categoria = sc.next();
+            System.out.println("Introduce precio del producto (los decimales con punto/coma, comprobar");
+            double precio = sc.nextDouble();
+            System.out.println("Introduce breve descripcion del producto");
+            String descripcion = sc.nextLine();
+
+            sc.close();
 
 
-                    //
-                    try {
-                        statement = connection.createStatement();
-                        String query = String.format("INSERT INTO %s (%s,%s,%s,%s) VALUES ('%s','%s',%s,'%s')",
-                                EsquemaDB.TAB_PRODUCTOS,
-                                EsquemaDB.COL_NOMBRE, EsquemaDB.COL_CATEGORIA, EsquemaDB.COL_PRECIO, EsquemaDB.COL_DESCRIPCION,
-                                item.getNombre(), item.getCategoria(), item.getPrecio(), item.getDescripcion());
+            // se podria hacer con sacando el valor de la clave en json, quizas
+            preparedStatement.setString(1, nombre);
+            preparedStatement.setString(2, categoria);
+            preparedStatement.setDouble(3, precio);
+            preparedStatement.setString(4, descripcion);
+
+            preparedStatement.executeUpdate();//confirmacion
 
 
-                        statement.executeUpdate(query);
-
-                        System.out.println(item.getNombre());
-
-                        //
-                    } catch (SQLException e) {
-                        System.err.println("Fallo en la sentencia SQL en JSON");
-                        System.out.println(e.getMessage());
-                    } finally {
-                        try {
-                            statement.close();
-                        } catch (SQLException e) {
-                            System.err.println("Error de cerrado de StatmentJSON");
-                        }
-                    }
-                }
-            }
+        } catch (SQLException e) {
+            System.err.println("Fallo en la sentencia SQL en JSON");
+            System.out.println(e.getMessage());
         } finally {
             try {
-                statement.close();
+                preparedStatement.close();
                 connection.close();
             } catch (SQLException e) {
-                System.err.println("Error de cerrado de StatmentJSON");
+                System.err.println("Error de cerrado de StatmentJSON o Connect");
             }
         }
+
 
     }
 
