@@ -8,6 +8,7 @@ import repositories.ProductsRepository;
 import repositories.ClienteRepository;
 
 import java.util.Scanner;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,14 +19,64 @@ public class Menu_Inicio_App {
     String clienteActual = null;
 
 
+    public boolean inicioSesion() {
 
-    public boolean comprobarAdmin(){
-        if("jjgomez@mail.es".equals(clienteActual)){
+        String correoInicio = null;
+        String passwordInicio = null;
+        int contadorDeVecesCorreo = 0;
+        int contadorDeVecesPass = 3;
+
+        do {
+            System.out.println("Introduce tu correo electronico");
+            correoInicio = sc.next();
+            //clienteRepository.correoExisteDB(correoInicio);
+            if (!clienteRepository.correoExisteDB(correoInicio)) {
+                System.out.println("El correo introducido contiene errores, o no está registrado");
+                contadorDeVecesCorreo++;
+                if (contadorDeVecesCorreo == 3) {
+                    System.out.println("Ya has intentado 3 veces el correo, y no existe o esta mal escrito, por favor REGISTRESE:");
+                    clienteRepository.registrarClienteNuevo();
+                    return false;
+                }
+            } else {
+                System.out.println("El correo es correcto");
+                break;
+            }
+
+        } while (contadorDeVecesCorreo < 3);
+
+
+        if (clienteRepository.correoExisteDB(correoInicio)) {
+
+            do {
+
+                System.out.println("Introduce tu password");
+                passwordInicio = sc.next();
+                if (clienteRepository.verificarPasswordParaInicio(correoInicio, passwordInicio)) {
+                    clienteActual = correoInicio;
+                    System.out.println("🏪Correo y contraseña correctos, Inicio de Sesión Exitoso🏪");
+
+                    return true;
+                } else {
+                    contadorDeVecesPass--;
+                    System.err.println("El password no coincide con la base de datos");
+                    System.out.println("Te quedan " + contadorDeVecesPass + " intentos");
+                }
+            } while (contadorDeVecesPass > 0 || !clienteRepository.verificarPasswordParaInicio(correoInicio, passwordInicio));
+
+
+        }
+        return false;
+    }
+
+    public boolean comprobarAdmin() {
+        if ("jjgomez@mail.es".equals(clienteActual)) {
             return true;
         }
         return false;
         // TODO: 14/08/2024 incorporar a menuInicial la comprobacion y derivar a un menú u otro (admin/user)
     }
+
     public void menuInicial() {
 
 
@@ -57,7 +108,7 @@ public class Menu_Inicio_App {
                         if (!clienteRepository.correoExisteDB(correoInicio)) {
                             System.out.println("El correo introducido contiene errores, o no está registrado");
                             contadorDeVecesCorreo++;
-                            if (contadorDeVecesCorreo > 3) {
+                            if (contadorDeVecesCorreo >= 3) {
                                 System.out.println("Ya has intentado 3 veces el correo, y no existe o esta mal escrito, por favor REGISTRESE:");
                                 clienteRepository.registrarClienteNuevo();
                             }
@@ -66,7 +117,7 @@ public class Menu_Inicio_App {
                             break;
                         }
 
-                    } while (contadorDeVecesCorreo < 4 || clienteRepository.correoExisteDB(correoInicio));
+                    } while (contadorDeVecesCorreo < 3);
 
 
                     if (clienteRepository.correoExisteDB(correoInicio)) {
@@ -77,7 +128,7 @@ public class Menu_Inicio_App {
                             System.out.println("Introduce tu password");
                             passwordInicio = sc.next();
                             if (clienteRepository.verificarPasswordParaInicio(correoInicio, passwordInicio)) {
-                                clienteActual=correoInicio;
+                                clienteActual = correoInicio;
                                 System.out.println("🏪ESTAS DENTRO DEL MENÚ, AHORA CREA EL MENÚ DE LA TIENDA Y LA TIENDA HUEVON🏪");
                                 // TODO: 17/06/2024 AQUI LLEVAR AL MENÚ DE TIENDA...comprar y demas
                                 break;
@@ -111,7 +162,7 @@ public class Menu_Inicio_App {
     }
 
 
-    public void menuAdmin(){
+    public void menuAdmin() {
         int opcion = -1;
 
 
@@ -122,7 +173,7 @@ public class Menu_Inicio_App {
                 3-ELIMINAR PRODUCTO
                 """);
 
-        switch (opcion){
+        switch (opcion) {
             case 1:
                 productsRepository.agregarNuevoProductoADatabase();
                 break;
