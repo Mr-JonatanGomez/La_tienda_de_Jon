@@ -416,6 +416,95 @@ public class ProductsRepository {
 
     }
 
+    public void modificarProductoDatabase2() {//quizas quitarle el producto aqui
+        System.out.println("💱MODIFICANDO PRODUCTO 💱");
+
+        int idProducto;
+        System.out.println("Introduce el id del producto a modificar");
+        Scanner sc = new Scanner(System.in);
+        idProducto = sc.nextInt();
+
+        if(verificarSiUnIDExisteDatabase(idProducto)){
+            connection = DBConnection.getConnection();
+            Statement statement = null;
+            ResultSet resultSet = null;
+
+
+            String queryResultSet = String.format("SELECT %s,%s, %s, %s FROM %s WHERE %s =" + idProducto + ";",
+                    EsquemaDB.COL_NOMBRE, EsquemaDB.COL_CATEGORIA, EsquemaDB.COL_PRECIO, EsquemaDB.COL_DESCRIPCION,
+                    EsquemaDB.TAB_PRODUCTOS,
+                    EsquemaDB.COL_ID_PRODUCTO);
+
+            try {
+
+                statement = connection.createStatement();
+                resultSet = statement.executeQuery(queryResultSet);
+
+
+                    String nombre = resultSet.getString("nombre");
+                    String categoria = resultSet.getString("categoria");
+                    double precio = resultSet.getDouble("precio");
+                    String descripcion = resultSet.getString("descripcion");
+
+                    System.out.println(
+                            "PRODUCTO QUE VAS A MODIFICAR ES: " +
+                                    "\nNOMBRE: " + nombre + "" +
+                                    "\nCATEGORIA: " + categoria + "" +
+                                    "\nPRECIO: " + precio + "" +
+                                    "\nDESCRIPCION: " + descripcion);
+
+
+                    System.out.println("Introduce el nuevo nombre");
+                    String nombreN = sc.next();
+                    System.out.println("Introduce la nueva categoria");
+                    String categoriaN = sc.next();
+                    System.out.println("Introduce el nuevo precio");
+                    double precioN = sc.nextDouble();
+                    sc.nextLine();
+                    System.out.println("Introduce la nueva descripcion");
+                    String descripcionN = sc.nextLine();
+
+                    String queryMod = String.format("UPDATE %s " +
+                                    "SET %s = '%s' " +
+                                    "%s = '%s'," +
+                                    "%s = %s " +
+                                    "%s = '%s'," +
+                                    "WHERE %s = %s ",
+                            EsquemaDB.TAB_PRODUCTOS,
+                            EsquemaDB.COL_NOMBRE, nombreN,
+                            EsquemaDB.COL_CATEGORIA, categoriaN,
+                            EsquemaDB.COL_PRECIO, precioN,
+                            EsquemaDB.COL_DESCRIPCION, descripcionN);
+
+                    int numero = statement.executeUpdate(queryMod);
+
+                    if (numero>0){
+                        System.out.println("El numero de productos modificados por el update fue: "+numero+"");
+                        System.out.println("Mensaje anterior SE PUEDE ELIMINAR");
+                        System.out.println(" Los datos fuero cambiado con exito!");
+                    }
+                    statement.close();
+
+
+
+
+
+
+            } catch (SQLException e) {
+                System.out.println("Error SQL al modificar producto "+e.getMessage());
+            }
+        } else {
+
+        }
+
+
+
+
+
+
+
+    }
+
     // RESTO CODIGO
 }
 
