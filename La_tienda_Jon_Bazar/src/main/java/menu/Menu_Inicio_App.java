@@ -96,51 +96,17 @@ public class Menu_Inicio_App {
 
             switch (opcion) {
                 case 1:
-                    String correoInicio = null;
-                    String passwordInicio = null;
-                    int contadorDeVecesCorreo = 0;
-                    int contadorDeVecesPass = 3;
-
-                    do {
-                        System.out.println("Introduce tu correo electronico");
-                        correoInicio = sc.next();
-                        clienteRepository.correoExisteDB(correoInicio);
-                        if (!clienteRepository.correoExisteDB(correoInicio)) {
-                            System.out.println("El correo introducido contiene errores, o no está registrado");
-                            contadorDeVecesCorreo++;
-                            if (contadorDeVecesCorreo >= 3) {
-                                System.out.println("Ya has intentado 3 veces el correo, y no existe o esta mal escrito, por favor REGISTRESE:");
-                                clienteRepository.registrarClienteNuevo();
-                            }
+                    // así inicia sesion y si es correcto...
+                    if (inicioSesion()) {
+                        if ("jjgomez@mail.es".equals(clienteActual)) {
+                            menuAdmin();
                         } else {
-                            System.out.println("El correo es correcto");
-                            break;
+                            menuUser();
                         }
 
-                    } while (contadorDeVecesCorreo < 3);
-
-
-                    if (clienteRepository.correoExisteDB(correoInicio)) {
-
-                        do {
-
-
-                            System.out.println("Introduce tu password");
-                            passwordInicio = sc.next();
-                            if (clienteRepository.verificarPasswordParaInicio(correoInicio, passwordInicio)) {
-                                clienteActual = correoInicio;
-                                System.out.println("🏪ESTAS DENTRO DEL MENÚ, AHORA CREA EL MENÚ DE LA TIENDA Y LA TIENDA HUEVON🏪");
-                                // TODO: 17/06/2024 AQUI LLEVAR AL MENÚ DE TIENDA...comprar y demas
-                                break;
-                            } else {
-                                contadorDeVecesPass--;
-                                System.err.println("El password no coincide con la base de datos");
-                                System.out.println("Te quedan " + contadorDeVecesPass + " intentos");
-                            }
-                        } while (contadorDeVecesPass > 0 || !clienteRepository.verificarPasswordParaInicio(correoInicio, passwordInicio));
-
-
                     }
+
+//ahora mismo tras inicio sesion vuelve al menu por no haber nada
                     break;
                 case 2:
 
@@ -165,12 +131,51 @@ public class Menu_Inicio_App {
     public void menuAdmin() {
         int opcion = -1;
 
+        Scanner sc = new Scanner(System.in);
+
+        do {
+
 
         System.out.println("""
                 MENU DE ADMINISTRADOR
                 1-AGREGAR PRODUCTO
                 2-MODIFICAR PRODUCTO
                 3-ELIMINAR PRODUCTO
+                0-SALIR
+                """);
+        opcion = sc.nextInt();
+        switch (opcion) {
+            case 1:
+                productsRepository.agregarNuevoProductoADatabase();
+                break;
+            case 2:
+                productsRepository.modificarProductoDatabase();
+                break;
+            case 3:
+
+                break;
+            case 0:
+
+                break;
+            default:
+                System.out.println("opcion no contemplada");
+        }
+        }while(opcion!=0);
+    }
+
+    public void menuUser() {
+        int opcion = -1;
+
+
+        System.out.println("""
+                MENU DE COMPRA en construccion TODAVIA; NO PONERSE NERVIOSOS
+                1-VER PRODUCTOS
+                2-AÑADIR PRODUCTOS AL CARRITO
+                3-ELIMINAR PRODUCTOS DEL CARRITO
+                4-VER CARRITO ACTUAL
+                5-REALIZAR COMPRA y por supuesto, PAGAR
+                6-HISTORIAL DE COMPRAS
+                0-GUARDAR CARRITO ACTUAL, CERRAR SESION y SALIR AL MENU INICIAL
                 """);
 
         switch (opcion) {
@@ -187,7 +192,7 @@ public class Menu_Inicio_App {
 
                 break;
             default:
-                System.out.println("opcion no contemplada");
+                // System.out.println("opcion no contemplada");
         }
     }
 }

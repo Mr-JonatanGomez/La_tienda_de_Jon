@@ -17,6 +17,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.Locale;
 import java.util.Scanner;
 
 @Getter
@@ -260,17 +262,24 @@ public class ProductsRepository {
             preparedStatement = connection.prepareStatement(query);
 
             Scanner sc = new Scanner(System.in);
+            //esto es para que acepte el punto como decimal, ya que la coma no vale si trabajas con jdbc
+            sc.useLocale(Locale.US);
 
             System.out.println("Introduce nombre del producto");
-            String nombre = sc.next();
+            String nombre = sc.nextLine();
+
             System.out.println("Introduce categoria del producto");
-            String categoria = sc.next();
+            String categoria = sc.nextLine();
+
             System.out.println("Introduce precio del producto (los decimales con punto/coma, comprobar");
             double precio = sc.nextDouble();
+            sc.nextLine();
             System.out.println("Introduce breve descripcion del producto");
             String descripcion = sc.nextLine();
 
-            sc.close();
+
+
+
 
 
             // se podria hacer con sacando el valor de la clave en json, quizas
@@ -282,7 +291,10 @@ public class ProductsRepository {
             preparedStatement.executeUpdate();//confirmacion
 
 
-        } catch (SQLException e) {
+        } catch (InputMismatchException e) {
+            System.err.println("al introduccir datos, de un tipo incorrecto");
+            System.out.println(e.getMessage());
+        }catch (SQLException e) {
             System.err.println("Fallo en la sentencia SQL en JSON");
             System.out.println(e.getMessage());
         } finally {
@@ -320,11 +332,12 @@ public class ProductsRepository {
         return false;
     }
 
-    public void modificarProductoDatabase(Producto producto) {//quizas quitarle el producto aqui
+    public void modificarProductoDatabase() {//quizas quitarle el producto aqui
         Scanner sc = new Scanner(System.in);
         connection = DBConnection.getConnection();
         Statement statement = null;
         ResultSet resultSet = null;
+
         System.out.println("💱MODIFICANDO PRODUCTO 💱");
         int idProducto = 0;
 
@@ -384,10 +397,12 @@ public class ProductsRepository {
 
                 if (numero>0){
                     System.out.println("El numero de productos modificados por el update fue: "+numero+"");
+                    System.out.println("Mensaje anterior SE PUEDE ELIMINAR");
+                    System.out.println(" Los datos fuero cambiado con exito!");
                 }
                 statement.close();
 
-                System.out.println(" Los datos fuero cambiado con exito!");
+
 
             } else {
                 System.out.println("El id de producto no existe en la DATABASE");
