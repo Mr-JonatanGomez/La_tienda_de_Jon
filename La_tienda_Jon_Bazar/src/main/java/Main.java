@@ -20,18 +20,18 @@ public class Main {
         ClienteRepository clienteRepository = new ClienteRepository();
         ProductsRepository productsRepository =new ProductsRepository();
 
-        // esto agrega los productos del JSON si no hay productos en la database
+
         productsRepository.agregarProductosEnDatabase();
 
 
         menu.menuInicial();//
-        //clienteRepository.registrarClienteNuevo();
 
-        //clienteRepository.cifradoPassword("jonatan25gomez");
 
         //clienteRepository.verificarPasswordParaInicio("Hashing@Password1.com","Abcd1234");
 
-        
+        //    jjgomez@mail.es    jon123gom
+        //Crisp and juicy acid apple, ideal for snacking, baking, or adding a refreshing crunch to your meals.
+
 
     }
 }
