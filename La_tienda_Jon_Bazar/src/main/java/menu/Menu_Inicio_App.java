@@ -149,7 +149,7 @@ public class Menu_Inicio_App {
                 productsRepository.agregarNuevoProductoADatabase();
                 break;
             case 2:
-                productsRepository.modificarProductoDatabase2();
+                productsRepository.modificarProductoDatabase3();
                 break;
             case 3:
 
