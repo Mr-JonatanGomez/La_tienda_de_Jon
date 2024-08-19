@@ -3,7 +3,6 @@ package menu;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import model.Cliente;
 import repositories.ProductsRepository;
 import repositories.ClienteRepository;
 
@@ -149,7 +148,7 @@ public class Menu_Inicio_App {
                 productsRepository.agregarNuevoProductoADatabase();
                 break;
             case 2:
-                productsRepository.modificarProductoDatabase3();
+                productsRepository.modificarProductoDatabase();
                 break;
             case 3:
 

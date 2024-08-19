@@ -37,15 +37,8 @@ public class ProductsRepository {
 
     private ArrayList<Producto> listadoProductos;
 
-    //posible para eliminar
-    /*
-    public ExtraccionProductosJSON(URL url, ArrayList<Producto> listadoProductos) {
-        this.url = url;
-        this.listadoProductos = new ArrayList<>();
-    }
-    */
 
-    public void crearProductsYLeerlosENArrayDeJava() {
+    public void crearProductosJsonArraylist() {
         /*
         This method copy the products from DummyJson to
         ArrayList with the necesary atributes for my program,
@@ -103,7 +96,6 @@ public class ProductsRepository {
         }
     }
 
-
     public boolean comprobarSiHayProductosEnDatabase() {
         /*
         This method verify the products on database, if exists products on database,
@@ -157,13 +149,12 @@ public class ProductsRepository {
         return resultado;
     }
 
-    public void agregarProductosEnDatabase() {
-
-
-        //primero se comprueba si hay productos en Database con el metodo anterior
+    public void llevarProductosADatabase() {
+        //primero se comprueba si hay productos en Database con el metodo anterior,
+        // tras esto, si no la tabla está vacia, la llena
 
         if (!comprobarSiHayProductosEnDatabase()) {
-            crearProductsYLeerlosENArrayDeJava();
+            crearProductosJsonArraylist();
             connection = DBConnection.getConnection();
             PreparedStatement preparedStatement = null;
 
@@ -249,7 +240,7 @@ public class ProductsRepository {
         Statement statement = null;
         ResultSet resultSet = null;
 
-        String query = String.format("SELECT %s, %s, %s,%s FROM %s WHERE %s ="+idProducto,
+        String query = String.format("SELECT %s, %s, %s,%s FROM %s WHERE %s =" + idProducto,
                 EsquemaDB.COL_ID_PRODUCTO, EsquemaDB.COL_NOMBRE, EsquemaDB.COL_PRECIO, EsquemaDB.COL_DESCRIPCION, EsquemaDB.TAB_PRODUCTOS, EsquemaDB.COL_ID_PRODUCTO);
 
         try {
@@ -274,8 +265,29 @@ public class ProductsRepository {
             DBConnection.closeConnection();
             connection = null;
         }
+    }
 
+    public boolean verificarSiUnIDExisteDatabase(int idProducto) {
+        connection = DBConnection.getConnection();
+        try {
+            String queryBusq = String.format("SELECT %s,%s, %s, %s FROM %s WHERE %s =" + idProducto + ";",
+                    EsquemaDB.COL_NOMBRE, EsquemaDB.COL_CATEGORIA, EsquemaDB.COL_PRECIO, EsquemaDB.COL_DESCRIPCION,
+                    EsquemaDB.TAB_PRODUCTOS,
+                    EsquemaDB.COL_ID_PRODUCTO);
 
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(queryBusq);
+            if (resultSet.next()) {
+                return true;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al crear Conexion SQL verificando si el producto EXISTE");
+        } finally {
+            DBConnection.closeConnection();
+            connection = null;
+        }
+
+        return false;
     }
 
     public void agregarNuevoProductoADatabase() {
@@ -313,10 +325,6 @@ public class ProductsRepository {
             String descripcion = sc.nextLine();
 
 
-
-
-
-
             // se podria hacer con sacando el valor de la clave en json, quizas
             preparedStatement.setString(1, nombre);
             preparedStatement.setString(2, categoria);
@@ -329,7 +337,7 @@ public class ProductsRepository {
         } catch (InputMismatchException e) {
             System.err.println("al introduccir datos, de un tipo incorrecto");
             System.out.println(e.getMessage());
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             System.err.println("Fallo en la sentencia SQL en JSON");
             System.out.println(e.getMessage());
         } finally {
@@ -344,220 +352,25 @@ public class ProductsRepository {
 
     }
 
-    public boolean verificarSiUnIDExisteDatabase(int idProducto) {
-        connection = DBConnection.getConnection();
-        try {
-            String queryBusq = String.format("SELECT %s,%s, %s, %s FROM %s WHERE %s =" + idProducto + ";",
-                    EsquemaDB.COL_NOMBRE, EsquemaDB.COL_CATEGORIA, EsquemaDB.COL_PRECIO, EsquemaDB.COL_DESCRIPCION,
-                    EsquemaDB.TAB_PRODUCTOS,
-                    EsquemaDB.COL_ID_PRODUCTO);
-
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(queryBusq);
-            if (resultSet.next()) {
-                return true;
-            }
-        } catch (SQLException e) {
-            System.out.println("Error al crear Conexion SQL verificando si el producto EXISTE");
-        } finally {
-            DBConnection.closeConnection();
-            connection = null;
-        }
-
-        return false;
-    }
-
-    public void modificarProductoDatabase() {//quizas quitarle el producto aqui
-        Scanner sc = new Scanner(System.in);
-        connection = DBConnection.getConnection();
-        Statement statement = null;
-        ResultSet resultSet = null;
-
-        System.out.println("💱MODIFICANDO PRODUCTO 💱");
-        int idProducto = 0;
-
-        //TERMINAR LA QUERY para el UPDATE
-        // TODO: 16/08/2024
-
-        String queryResultSet = String.format("SELECT %s,%s, %s, %s FROM %s WHERE %s =" + idProducto + ";",
-                EsquemaDB.COL_NOMBRE, EsquemaDB.COL_CATEGORIA, EsquemaDB.COL_PRECIO, EsquemaDB.COL_DESCRIPCION,
-                EsquemaDB.TAB_PRODUCTOS,
-                EsquemaDB.COL_ID_PRODUCTO);
-
-        try {
-            System.out.println("Introduce el id del producto a modificar");
-            idProducto = sc.nextInt();
-            // String queryBusqueda por si no funciona
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(queryResultSet);
-
-            //if exist, mostrar producto, acto seguido, preguntamos que nombre, precio, descripcion darle
-            //podria dar fallo al crear conexion dentro de conexion??
-            if (verificarSiUnIDExisteDatabase(idProducto)) {
-                String nombre = resultSet.getString("nombre");
-                String categoria = resultSet.getString("categoria");
-                double precio = resultSet.getDouble("precio");
-                String descripcion = resultSet.getString("descripcion");
-
-                System.out.println(
-                        "PRODUCTO QUE VAS A MODIFICAR ES: " +
-                                "\nNOMBRE: " + nombre + "" +
-                                "\nCATEGORIA: " + categoria + "" +
-                                "\nPRECIO: " + precio + "" +
-                                "\nDESCRIPCION: " + descripcion);
-
-
-                System.out.println("Introduce el nuevo nombre");
-                String nombreN = sc.next();
-                System.out.println("Introduce la nueva categoria");
-                String categoriaN = sc.next();
-                System.out.println("Introduce el nuevo precio");
-                double precioN = sc.nextDouble();
-                System.out.println("Introduce la nueva descripcion");
-                String descripcionN = sc.nextLine();
-
-                String queryMod = String.format("UPDATE %s " +
-                                "SET %s = '%s' " +
-                                "%s = '%s'," +
-                                "%s = %s " +
-                                "%s = '%s'," +
-                                "WHERE %s = %s ",
-                        EsquemaDB.TAB_PRODUCTOS,
-                        EsquemaDB.COL_NOMBRE, nombreN,
-                        EsquemaDB.COL_CATEGORIA, categoriaN,
-                        EsquemaDB.COL_PRECIO, precioN,
-                        EsquemaDB.COL_DESCRIPCION, descripcionN);
-
-                int numero = statement.executeUpdate(queryMod);
-
-                if (numero>0){
-                    System.out.println("El numero de productos modificados por el update fue: "+numero+"");
-                    System.out.println("Mensaje anterior SE PUEDE ELIMINAR");
-                    System.out.println(" Los datos fuero cambiado con exito!");
-                }
-                statement.close();
-
-
-
-            } else {
-                System.out.println("El id de producto no existe en la DATABASE");
-            }
-
-
-        } catch (SQLException e) {
-            System.out.println("Error SQL al modificar producto "+e.getMessage());
-        }
-
-
-    }
-
-    public void modificarProductoDatabase2() {//quizas quitarle el producto aqui
-        System.out.println("💱MODIFICANDO PRODUCTO 💱");
-
-        int idProducto;
-        System.out.println("Introduce el id del producto a modificar");
-        Scanner sc = new Scanner(System.in);
-        idProducto = sc.nextInt();
-        verificarSiUnIDExisteDatabase(idProducto);
-        if(verificarSiUnIDExisteDatabase(idProducto)){
-            connection = DBConnection.getConnection();
-            Statement statement = null;
-            ResultSet resultSet = null;
-
-
-            String queryResultSet = String.format("SELECT %s,%s, %s, %s FROM %s WHERE %s =" + idProducto + ";",
-                    EsquemaDB.COL_NOMBRE, EsquemaDB.COL_CATEGORIA, EsquemaDB.COL_PRECIO, EsquemaDB.COL_DESCRIPCION,
-                    EsquemaDB.TAB_PRODUCTOS,
-                    EsquemaDB.COL_ID_PRODUCTO);
-
-            try {
-
-                statement = connection.createStatement();
-                resultSet = statement.executeQuery(queryResultSet);
-
-
-                    String nombre = resultSet.getString("nombre");
-                    String categoria = resultSet.getString("categoria");
-                    double precio = resultSet.getDouble("precio");
-                    String descripcion = resultSet.getString("descripcion");
-
-                    System.out.println(
-                            "PRODUCTO QUE VAS A MODIFICAR ES: " +
-                                    "\nNOMBRE: " + nombre + "" +
-                                    "\nCATEGORIA: " + categoria + "" +
-                                    "\nPRECIO: " + precio + "" +
-                                    "\nDESCRIPCION: " + descripcion);
-
-
-                    System.out.println("Introduce el nuevo nombre");
-                    String nombreN = sc.next();
-                    System.out.println("Introduce la nueva categoria");
-                    String categoriaN = sc.next();
-                    System.out.println("Introduce el nuevo precio");
-                    double precioN = sc.nextDouble();
-                    sc.nextLine();
-                    System.out.println("Introduce la nueva descripcion");
-                    String descripcionN = sc.nextLine();
-
-                    String queryMod = String.format("UPDATE %s " +
-                                    "SET %s = '%s' " +
-                                    "%s = '%s'," +
-                                    "%s = %s " +
-                                    "%s = '%s'," +
-                                    "WHERE %s = %s ",
-                            EsquemaDB.TAB_PRODUCTOS,
-                            EsquemaDB.COL_NOMBRE, nombreN,
-                            EsquemaDB.COL_CATEGORIA, categoriaN,
-                            EsquemaDB.COL_PRECIO, precioN,
-                            EsquemaDB.COL_DESCRIPCION, descripcionN);
-
-                    int numero = statement.executeUpdate(queryMod);
-
-                    if (numero>0){
-                        System.out.println("El numero de productos modificados por el update fue: "+numero+"");
-                        System.out.println("Mensaje anterior SE PUEDE ELIMINAR");
-                        System.out.println(" Los datos fuero cambiado con exito!");
-                    }
-                    statement.close();
-
-
-
-
-
-
-            } catch (SQLException e) {
-                System.out.println("Error SQL al modificar producto "+e.getMessage());
-            }
-        } else {
-
-        }
-
-
-
-
-
-
-
-    }
-    public void modificarProductoDatabase3() {//quizas quitarle el producto aqui
+    public void modificarProductoDatabase() {
         System.out.println("💱MODIFICANDO PRODUCTO 💱");
 
         int idProducto;
         Scanner sc = new Scanner(System.in);
         sc.useLocale(Locale.US);
-        System.out.println("Introduce el id del producto a modificar");
+        System.out.println("Introduce el id del producto que quieres modificar");
         idProducto = sc.nextInt();
         sc.nextLine();
         boolean existe = false;
 
-        if (verificarSiUnIDExisteDatabase(idProducto)){
+        if (verificarSiUnIDExisteDatabase(idProducto)) {
             //verifica que el id a modificar existe, y si es así existe pasa a true
-        existe=true;
+            existe = true;
         }
 
-        if(existe){
+        if (existe) {
 
-            //si existe, lee el producto
+            //si existe, lee el producto, e
             System.out.println("EL PRODUCTO QUE VAS A MODIFICAR Y SUS DATOS ACTUALES SON:");
 
             leerUnProductoDeLaDataBase(idProducto);
@@ -569,7 +382,6 @@ public class ProductsRepository {
             try {
 
                 statement = connection.createStatement();
-
 
 
                 System.out.println("Introduce el nuevo nombre");
@@ -597,33 +409,55 @@ public class ProductsRepository {
 
                 int numero = statement.executeUpdate(queryMod);
 
-                if (numero>0){
+                if (numero > 0) {
                     //System.out.println("El numero de productos modificados por el update fue: "+numero+"");
                     System.out.println(" ✅ Los datos del producto fueron cambiados con exito! ✅");
                 }
                 statement.close();
 
 
-
-
-
-
             } catch (InputMismatchException e) {
                 System.err.println("al introduccir datos, de un tipo incorrecto");
                 System.out.println(e.getMessage());
-            }catch (SQLException e) {
-                System.out.println("Error SQL al modificar producto "+e.getMessage());
+            } catch (SQLException e) {
+                System.out.println("Error SQL al modificar producto " + e.getMessage());
             }
         } else {
             System.out.println(" El id de producto, no existe, y por tanto no lo puedes modificar");
         }
 
 
+    }
 
+    public void modificarStockage() {
+        Scanner sc = new Scanner(System.in);
+        int idProd = -1;
+        boolean existe = false;
 
+        System.out.println("📦Introduce el ID del producto que quieres agregar o quitar STOCK 📦");
 
+        idProd = sc.nextInt();
 
+        if (verificarSiUnIDExisteDatabase(idProd)) {
+            existe = true;
+        }
 
+        if (existe) {
+
+            connection = DBConnection.getConnection();
+            PreparedStatement preparedStatement = null;
+
+            String query = "UPDATE " + EsquemaDB.TAB_PRODUCTOS + "";
+            try {
+                preparedStatement = connection.prepareStatement(query);
+
+            } catch (SQLException e) {
+                System.out.println("Error SQL connection en modificar Stockage\n" + e.getMessage());
+            }
+
+            DBConnection.closeConnection();
+            connection = null;
+        }
     }
 
     // RESTO CODIGO

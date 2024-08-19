@@ -21,7 +21,7 @@ public class Main {
         ProductsRepository productsRepository =new ProductsRepository();
 
 
-        productsRepository.agregarProductosEnDatabase();
+        productsRepository.llevarProductosADatabase();
 
 
         menu.menuInicial();//
