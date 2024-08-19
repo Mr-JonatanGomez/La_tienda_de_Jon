@@ -135,31 +135,38 @@ public class Menu_Inicio_App {
         do {
 
 
-        System.out.println("""
-                MENU DE ADMINISTRADOR
-                1-AGREGAR PRODUCTO
-                2-MODIFICAR PRODUCTO
-                3-ELIMINAR PRODUCTO
-                0-SALIR
-                """);
-        opcion = sc.nextInt();
-        switch (opcion) {
-            case 1:
-                productsRepository.agregarNuevoProductoADatabase();
-                break;
-            case 2:
-                productsRepository.modificarProductoDatabase();
-                break;
-            case 3:
+            System.out.println("""
+                    MENU DE ADMINISTRADOR
+                    1-AGREGAR PRODUCTO
+                    2-MODIFICAR PRODUCTO
+                    3-SUMAR STOCK
+                    4-RESTAR STOCK
+                    0-SALIR
+                    """);
+            opcion = sc.nextInt();
+            switch (opcion) {
+                case 1:
+                    productsRepository.agregarNuevoProductoADatabase();
+                    break;
+                case 2:
+                    productsRepository.modificarProductoDatabase();
+                    break;
+                case 3:
+                    productsRepository.addStockage();
+                    break;
+                case 4:
+                    productsRepository.deleteStockage();
+                    break;
+                case 5:
 
-                break;
-            case 0:
+                    break;
+                case 0:
 
-                break;
-            default:
-                System.out.println("opcion no contemplada");
-        }
-        }while(opcion!=0);
+                    break;
+                default:
+                    System.out.println("opcion no contemplada");
+            }
+        } while (opcion != 0);
     }
 
     public void menuUser() {
