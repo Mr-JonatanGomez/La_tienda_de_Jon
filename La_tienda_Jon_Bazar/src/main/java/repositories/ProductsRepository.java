@@ -268,10 +268,11 @@ public class ProductsRepository {
         }
     }
 
-    public void consultaYLecturaStockOfProduct(int idProducto) {
+    public int consultaYLecturaStockOfProduct(int idProducto) {
         connection = DBConnection.getConnection();
         Statement statement = null;
         ResultSet resultSet = null;
+        int stock = -1;
 
         String query = String.format("SELECT %s, %s, %s " +
                         "FROM %s " +
@@ -285,26 +286,26 @@ public class ProductsRepository {
             statement = connection.createStatement();
             resultSet = statement.executeQuery(query);
 
-            if (resultSet.next()){
+            if (resultSet.next()) {
                 int id = resultSet.getInt("id_producto");
                 String name = resultSet.getString("nombre");
-                int stock = resultSet.getInt("stock");
+                stock = resultSet.getInt("stock");
 
                 System.out.println("El stockage ACTUAL de:\n" +
                         "ID: " + id + ", " + name + ", es de " + stock + " unidades en TOTAL");
-            }else {
+            } else {
                 System.out.println(" No se encontró producto con este ID");
             }
 
 
-
         } catch (SQLException e) {
-            System.out.println("Error SQL en leer Stockage\n"+e.getMessage());
+            System.out.println("Error SQL en leer Stockage\n" + e.getMessage());
         } finally {
             DBConnection.closeConnection();
             connection = null;
         }
 
+        return stock;
     }
 
     public boolean verificarSiUnIDExisteDatabase(int idProducto) {
@@ -483,7 +484,7 @@ public class ProductsRepository {
         }
         if (existe) {
             consultaYLecturaStockOfProduct(idProd);
-        }else{
+        } else {
             System.out.println("El ID del producto no existe");
         }
 
@@ -495,14 +496,12 @@ public class ProductsRepository {
             connection = DBConnection.getConnection();
             Statement statement = null;
 
-            String query= String.format("UPDATE %s " +
-                    "SET %s = %s + %s " +
-                    "WHERE %s = %s;",
+            String query = String.format("UPDATE %s " +
+                            "SET %s = %s + %s " +
+                            "WHERE %s = %s;",
                     EsquemaDB.TAB_PRODUCTOS,
                     EsquemaDB.COL_STOCK, EsquemaDB.COL_STOCK, cantidadSumada,
                     EsquemaDB.COL_ID_PRODUCTO, idProd);
-
-
 
 
             try {
@@ -529,17 +528,13 @@ public class ProductsRepository {
     }
 
     public void deleteStockage() {
+        // TODO: 22/08/2024 metodo valido para admin al restar,
+        //  o para agregar al carrito los user, y que el Stock disminuya
         Scanner sc = new Scanner(System.in);
         int idProd = -1;
         boolean existe = false;
-        int cantidadSumada = 0;
-
-        // TODO: 19/08/2024  permite restar mas del stock actual,
-        //  y es imposible tener -9 manzanas... falta corregir esto, almacenando el stock
-
-        //cantidad Stock actual como variable privada del repo, para poder establecer
-        // cuando sea leida por su metodo, y usarla en deleteStock
-
+        int cantidadRestada = 0;
+        int stockActual = 0;
 
         System.out.println("📦Introduce el ID del producto que quieres restar STOCK 📦");
 
@@ -549,49 +544,62 @@ public class ProductsRepository {
             existe = true;
         }
         if (existe) {
-            consultaYLecturaStockOfProduct(idProd);
-        }else{
+            //a la vez que leemos y mostramos producto y stock,
+            // establecemos la variable stock actual para en caso de querer restar más
+            // del stock actual, que no sea posible
+            stockActual = consultaYLecturaStockOfProduct(idProd);
+
+
+        } else {
             System.out.println("El ID del producto no existe");
         }
 
         if (existe) {
 
             System.out.println("Introduce la cantidad de Stockage a RESTAR de este producto");
-            cantidadSumada = sc.nextInt();
+            cantidadRestada = sc.nextInt();
 
-            connection = DBConnection.getConnection();
-            Statement statement = null;
+            if (cantidadRestada <= stockActual) {
 
-            String query= String.format("UPDATE %s " +
-                            "SET %s = %s - %s " +
-                            "WHERE %s = %s;",
-                    EsquemaDB.TAB_PRODUCTOS,
-                    EsquemaDB.COL_STOCK, EsquemaDB.COL_STOCK, cantidadSumada,
-                    EsquemaDB.COL_ID_PRODUCTO, idProd);
+                connection = DBConnection.getConnection();
+                Statement statement = null;
+
+                String query = String.format("UPDATE %s " +
+                                "SET %s = %s - %s " +
+                                "WHERE %s = %s;",
+                        EsquemaDB.TAB_PRODUCTOS,
+                        EsquemaDB.COL_STOCK, EsquemaDB.COL_STOCK, cantidadRestada,
+                        EsquemaDB.COL_ID_PRODUCTO, idProd);
 
 
+                try {
+                    statement = connection.createStatement();
+                    int numero = statement.executeUpdate(query);
+
+                    if (numero > 0) {
+                        //System.out.println("El numero de productos modificados por el update fue: "+numero+"");
+                        System.out.println(" ✅ Las unidades del STOCKAGE del producto fueron sumados con exito! ✅");
+                    }
 
 
-            try {
-                statement = connection.createStatement();
-                int numero = statement.executeUpdate(query);
+                    statement.close();
 
-                if (numero > 0) {
-                    //System.out.println("El numero de productos modificados por el update fue: "+numero+"");
-                    System.out.println(" ✅ Las unidades del STOCKAGE del producto fueron sumados con exito! ✅");
+                } catch (SQLException e) {
+                    System.out.println("Error SQL connection al sumar Stockage\n" + e.getMessage());
+                } catch (InputMismatchException e) {
+                    System.out.println("Error en el tipo de datos introducido\n" + e.getMessage());
+                } finally {
+
+                    DBConnection.closeConnection();
+                    connection = null;
                 }
 
-
-                statement.close();
-
-            } catch (SQLException e) {
-                System.out.println("Error SQL connection al sumar Stockage\n" + e.getMessage());
-            } catch (InputMismatchException e) {
-                System.out.println("Error en el tipo de datos introducido\n" + e.getMessage());
+            } else {
+                System.out.println("🚫 No puedes restar más Stock del que ya tienes 🚫");
             }
 
-            DBConnection.closeConnection();
-            connection = null;
+
+
         }
     }
 
