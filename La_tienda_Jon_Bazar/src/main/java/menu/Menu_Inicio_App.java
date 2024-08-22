@@ -141,6 +141,7 @@ public class Menu_Inicio_App {
                     2-MODIFICAR PRODUCTO
                     3-SUMAR STOCK
                     4-RESTAR STOCK
+                    5-ELIMINAR PRODUCTO
                     0-SALIR
                     """);
             opcion = sc.nextInt();
@@ -155,10 +156,10 @@ public class Menu_Inicio_App {
                     productsRepository.addStockage();
                     break;
                 case 4:
-                    productsRepository.deleteStockage();
+                    productsRepository.restarStockage_addCarritoCliente();
                     break;
                 case 5:
-
+                    productsRepository.deleteProductDatabase();
                     break;
                 case 0:
 

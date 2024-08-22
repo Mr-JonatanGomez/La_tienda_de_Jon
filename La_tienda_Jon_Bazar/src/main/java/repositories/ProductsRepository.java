@@ -392,7 +392,6 @@ public class ProductsRepository {
 
 
     }
-
     public void modificarProductoDatabase() {
         System.out.println("💱MODIFICANDO PRODUCTO 💱");
 
@@ -468,7 +467,6 @@ public class ProductsRepository {
 
 
     }
-
     public void addStockage() {
         Scanner sc = new Scanner(System.in);
         int idProd = -1;
@@ -526,8 +524,7 @@ public class ProductsRepository {
             connection = null;
         }
     }
-
-    public void deleteStockage() {
+    public void restarStockage_addCarritoCliente() {
         // TODO: 22/08/2024 metodo valido para admin al restar,
         //  o para agregar al carrito los user, y que el Stock disminuya
         Scanner sc = new Scanner(System.in);
@@ -602,6 +599,53 @@ public class ProductsRepository {
 
         }
     }
+    public void deleteProductDatabase(){
+        Scanner sc=new Scanner(System.in);
+        System.out.println("Introduce el ID, del producto que quieras eliminar");
+        int idDelete = sc.nextInt();
+        boolean existe=false;
+
+        if (verificarSiUnIDExisteDatabase(idDelete)){
+            System.out.println("El producto que vas a eliminar es el siguiente: ");
+            leerUnProductoDeLaDataBase(idDelete);
+            existe=true;
+        }else{
+            System.out.println("Dicho ID no existe.");
+        }
+
+        if (existe){
+
+            connection=DBConnection.getConnection();
+
+            Statement statement= null;
+
+            try {
+                statement=connection.createStatement();
+                String query = String.format("DELETE FROM %s WHERE %s = %s;",
+                        EsquemaDB.TAB_PRODUCTOS, EsquemaDB.COL_ID_PRODUCTO, idDelete);
+
+                int afectadas=statement.executeUpdate(query);
+
+                if (afectadas>0){
+                    System.out.println("El producto con ID: "+idDelete+" ha sido 🚮 eliminado 🚮 de la DATABASE correctamente");
+                } else{
+                    System.out.println("EL producto no ha podido ser eliminado");
+                }
+
+            } catch (SQLException e) {
+                System.out.println("Error conex SQL en Borrado Producto");
+            } catch (InputMismatchException e){
+                System.out.println("El tipo de dato es incorrecto en DeleteProduct");
+            } finally {
+                DBConnection.closeConnection();
+                connection=null;
+
+            }
+
+        }
+
+    }
+
 
     // RESTO CODIGO
 }
