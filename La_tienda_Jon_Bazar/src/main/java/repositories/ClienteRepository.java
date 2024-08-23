@@ -172,7 +172,6 @@ public class ClienteRepository {
 
 
     }
-
     public boolean correoExisteDB(String correo) {
         boolean existeCorreo = false;
 
@@ -201,7 +200,6 @@ public class ClienteRepository {
         return existeCorreo;
 
     }
-
     public boolean verificarPasswordParaInicio(String correo, String plainPassword) {
         boolean acceso = false;
 

@@ -29,7 +29,8 @@ public class Main {
 
         //clienteRepository.verificarPasswordParaInicio("Hashing@Password1.com","Abcd1234");
 
-        //     jjgomez@mail.es   jon123gom a
+        //     jjgomez@mail.es   jon123gom
+        //     gomezillo13@gmail.com  jose1234
         //Crisp and juicy acid apple, ideal for snacking, baking, or adding a refreshing crunch to your meals.
 
 

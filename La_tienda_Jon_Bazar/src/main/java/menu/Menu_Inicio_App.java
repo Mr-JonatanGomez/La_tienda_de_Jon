@@ -87,7 +87,7 @@ public class Menu_Inicio_App {
                                     
                     1- INICIAR SESIÓN
                     2- REGISTRARSE
-                    3- Mostrar PRODUCTOS EN CRUD
+                    
                                     
                     0- SALIR
                     """);
@@ -112,13 +112,12 @@ public class Menu_Inicio_App {
                     clienteRepository.registrarClienteNuevo();
                     break;
 
-                case 3:
 
-                    productsRepository.mostrarProductosTienda();
-
-                    break;
                 case 0:
                     System.out.println("Saliendo de la APP");
+                    break;
+                default:
+                    System.out.println("Opcion no contemplada");
                     break;
 
             }
@@ -172,25 +171,33 @@ public class Menu_Inicio_App {
 
     public void menuUser() {
         int opcion = -1;
-
+        Scanner scop =new Scanner(System.in);
 
         System.out.println("""
                 MENU DE COMPRA en construccion TODAVIA; NO PONERSE NERVIOSOS
-                1-VER PRODUCTOS
-                2-AÑADIR PRODUCTOS AL CARRITO
-                3-ELIMINAR PRODUCTOS DEL CARRITO
-                4-VER CARRITO ACTUAL
-                5-REALIZAR COMPRA y por supuesto, PAGAR
-                6-HISTORIAL DE COMPRAS
+                1-VER TODOS LOS PRODUCTOS
+                2-VER TODOS LOS PRODUCTOS DE UNA CATEGORIA (beauty, fragances, furniture, groceries, sports)
+                3-AÑADIR PRODUCTOS AL CARRITO
+                4-ELIMINAR PRODUCTOS DEL CARRITO
+                5-VER CARRITO ACTUAL
+                6-REALIZAR COMPRA y por supuesto, PAGAR
+                7-HISTORIAL DE COMPRAS
                 0-GUARDAR CARRITO ACTUAL, CERRAR SESION y SALIR AL MENU INICIAL
                 """);
 
+        opcion= scop.nextInt();
         switch (opcion) {
             case 1:
-                productsRepository.agregarNuevoProductoADatabase();
+                productsRepository.mostrarProductosTienda();
                 break;
             case 2:
-
+                String cat;
+                Scanner sc = new Scanner(System.in);
+                System.out.println("ESCRIBE DE QUE CATEGORIA QUIERES VER LOS PRODUCTOS?");
+                cat=sc.nextLine();
+                sc.close();
+                productsRepository.mostrarProductosTiendaXCat(cat);
+                // TODO: 23/08/2024 añadir si cat no existe...
                 break;
             case 3:
 
@@ -199,7 +206,8 @@ public class Menu_Inicio_App {
 
                 break;
             default:
-                // System.out.println("opcion no contemplada");
+                 System.out.println("opcion no contemplada");
+                 break;
         }
     }
 }
