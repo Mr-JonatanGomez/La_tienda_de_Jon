@@ -16,10 +16,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.Locale;
-import java.util.Scanner;
+import java.util.*;
 
 @Getter
 @Setter
@@ -278,6 +275,9 @@ public class ProductsRepository {
             System.out.println(e.getMessage());
         }catch (InputMismatchException e) {
             System.err.println("Error en el tipo de datos Producto por categoria para menu User");
+            System.out.println(e.getMessage());
+        }catch (NoSuchElementException e) {
+            System.err.println("Error en el tipo de datos Producto por categoria para menu User NO_SUCH");
             System.out.println(e.getMessage());
         } finally {
             DBConnection.closeConnection();

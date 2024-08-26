@@ -128,7 +128,6 @@ public class Menu_Inicio_App {
 
     public void menuAdmin() {
         int opcion = -1;
-
         Scanner sc = new Scanner(System.in);
 
         do {
@@ -170,10 +169,12 @@ public class Menu_Inicio_App {
     }
 
     public void menuUser() {
-        int opcion = -1;
+        int opcion=-1;
         Scanner scop =new Scanner(System.in);
 
-        System.out.println("""
+        do {
+
+            System.out.println("""
                 MENU DE COMPRA en construccion TODAVIA; NO PONERSE NERVIOSOS
                 1-VER TODOS LOS PRODUCTOS
                 2-VER TODOS LOS PRODUCTOS DE UNA CATEGORIA (beauty, fragances, furniture, groceries, sports)
@@ -185,29 +186,30 @@ public class Menu_Inicio_App {
                 0-GUARDAR CARRITO ACTUAL, CERRAR SESION y SALIR AL MENU INICIAL
                 """);
 
-        opcion= scop.nextInt();
-        switch (opcion) {
-            case 1:
-                productsRepository.mostrarProductosTienda();
-                break;
-            case 2:
-                String cat;
-                Scanner sc = new Scanner(System.in);
-                System.out.println("ESCRIBE DE QUE CATEGORIA QUIERES VER LOS PRODUCTOS?");
-                cat=sc.nextLine();
-                sc.close();
-                productsRepository.mostrarProductosTiendaXCat(cat);
-                // TODO: 23/08/2024 añadir si cat no existe...
-                break;
-            case 3:
+            opcion= scop.nextInt();
+            switch (opcion) {
+                case 1:
+                    productsRepository.mostrarProductosTienda();
+                    break;
+                case 2:
+                    String cat;
+                    Scanner sc = new Scanner(System.in);
+                    System.out.println("ESCRIBE DE QUE CATEGORIA QUIERES VER LOS PRODUCTOS?");
+                    cat=sc.nextLine();
 
-                break;
-            case 0:
+                    productsRepository.mostrarProductosTiendaXCat(cat);
+                    // TODO: 23/08/2024 añadir si cat no existe...
+                    break;
+                case 3:
 
-                break;
-            default:
-                 System.out.println("opcion no contemplada");
-                 break;
-        }
+                    break;
+                case 0:
+
+                    break;
+                default:
+                    System.out.println("opcion no contemplada");
+                    break;
+            }
+        }while (opcion != 0);
     }
 }
