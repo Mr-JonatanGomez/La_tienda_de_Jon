@@ -701,6 +701,10 @@ public class ProductsRepository {
 
     }
 
+    public void addCarrito(){
+        //
+    }
+
 
     // RESTO CODIGO
 }
