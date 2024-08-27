@@ -70,6 +70,7 @@ public class PedidoRepository {
         }
         cantidadDisponible=productsRepository.consultaYLecturaStockOfProduct(idProducto);
 
+        // TODO: 27/08/2024 solo igualar cantidad Disponible hecha, sin el CRUD de agregar 
         //para que no de cruce de conexion lo realizo por separado, podria meterse dentro del if pero me da fallos de conex.
 
         if (existeProducto){
