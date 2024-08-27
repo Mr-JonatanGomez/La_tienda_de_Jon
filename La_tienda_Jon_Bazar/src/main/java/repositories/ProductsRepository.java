@@ -23,7 +23,7 @@ import java.util.*;
 @NoArgsConstructor
 public class ProductsRepository {
     /*
-    1- necesitamos URL
+    1- necesitamos URL (SOLO PARA JSON, no para repository)
     2- un HTTPConnection
     3- Necesitamos leer la contestacion URL en TXT
     4- Pasar TXT a JSON

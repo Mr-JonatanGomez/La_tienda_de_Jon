@@ -3,6 +3,7 @@ package menu;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import repositories.PedidoRepository;
 import repositories.ProductsRepository;
 import repositories.ClienteRepository;
 
@@ -14,6 +15,7 @@ import java.util.Scanner;
 public class Menu_Inicio_App {
     ClienteRepository clienteRepository = new ClienteRepository();
     ProductsRepository productsRepository = new ProductsRepository();
+    PedidoRepository pedidoRepository = new PedidoRepository();
     Scanner sc = new Scanner(System.in);
     String clienteActual = null;
 
@@ -201,7 +203,7 @@ public class Menu_Inicio_App {
                     // TODO: 23/08/2024 añadir si cat no existe...
                     break;
                 case 3:
-
+                    pedidoRepository.addProductCarrito();
                     break;
                 case 0:
 
