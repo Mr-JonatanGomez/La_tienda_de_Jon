@@ -18,6 +18,7 @@ public class Menu_Inicio_App {
     PedidoRepository pedidoRepository = new PedidoRepository();
     Scanner sc = new Scanner(System.in);
     String clienteActual = null;
+    int idClienteActual;
 
 
     public boolean inicioSesion() {
@@ -80,9 +81,12 @@ public class Menu_Inicio_App {
 
     public void menuInicial() {
 
+        /*
+        Al cerrar sesion, se debe poner a null y cero el cliente actual e IdClienteActual
+        */
 
         int opcion = -1;
-        //PARTE INICIO SESION NO ACTIVA HASTA QUE HAGA EL RESSULT SET
+
         do {
             System.out.println("""
                     MENU DE INICIO
@@ -117,6 +121,8 @@ public class Menu_Inicio_App {
 
                 case 0:
                     System.out.println("Saliendo de la APP");
+                    clienteActual=null;
+                    idClienteActual=0;
                     break;
                 default:
                     System.out.println("Opcion no contemplada");
@@ -142,7 +148,7 @@ public class Menu_Inicio_App {
                     3-SUMAR STOCK
                     4-RESTAR STOCK
                     5-ELIMINAR PRODUCTO
-                    0-SALIR
+                    0-CERRAR SESION
                     """);
             opcion = sc.nextInt();
             switch (opcion) {
@@ -162,6 +168,9 @@ public class Menu_Inicio_App {
                     productsRepository.deleteProductDatabase();
                     break;
                 case 0:
+                    System.out.println("CERRANDO SESION");
+                    clienteActual=null;
+                    idClienteActual=0;
 
                     break;
                 default:
@@ -206,6 +215,9 @@ public class Menu_Inicio_App {
                     pedidoRepository.addProductCarrito();
                     break;
                 case 0:
+                    System.out.println("GURDANDO CARRITO, CERRANDO SESION Y SALIENDO AL MENÚ PRINCIPAL ");
+                    clienteActual=null;
+                    idClienteActual=0;
 
                     break;
                 default:

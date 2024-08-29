@@ -62,6 +62,7 @@ public class PedidoRepository {
         int idProducto= sc.nextInt();
         boolean existeProducto = false;
         int cantidadDisponible;
+        carritoCompra=new ArrayList<>();
 
         if (productsRepository.verificarSiUnIDExisteDatabase(idProducto)){
             existeProducto = true;
@@ -70,13 +71,24 @@ public class PedidoRepository {
         }
         cantidadDisponible=productsRepository.consultaYLecturaStockOfProduct(idProducto);
 
-        // TODO: 27/08/2024 solo igualar cantidad Disponible hecha, sin el CRUD de agregar 
+        // TODO: 27/08/2024 solo igualar cantidad Disponible hecha, sin el CRUD de agregar
         //para que no de cruce de conexion lo realizo por separado, podria meterse dentro del if pero me da fallos de conex.
 
         if (existeProducto){
             int cantidad;
             System.out.println("Cuanta cantidad de producto quieres");
             cantidad= sc.nextInt();
+
+            if (cantidad<=cantidadDisponible){
+                //se agregan los productos al arrayLIST
+                System.out.println("");
+            }
         }
+    }
+    public void confirmarPedido(){
+        //necesito sacar el idClienteActual, que el idPedido se establezca automatico
+
+        //y para detalles pedido, agregar todos los productos, con el idPedido anterior y un idDetalle automatico
+        //que eso si esta bien diseñado en la database
     }
 }
