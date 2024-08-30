@@ -5,6 +5,7 @@ import database.EsquemaDB;
 import exceptions.DigitInNameException;
 import exceptions.TipoCorreoIncorrecto;
 import exceptions.TipoPasswordIcorrecto;
+import menu.Menu_Inicio_App;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.File;
@@ -187,6 +188,7 @@ public class ClienteRepository {
             while (resultSet.next()) {
                 if (resultSet.getString("correo").equalsIgnoreCase(correo)) {
                     existeCorreo = true;
+
                     break;
                 }
             }
@@ -234,6 +236,77 @@ public class ClienteRepository {
         }
 
         return false;
+    }
+
+
+    // TODO: 30/08/2024 intentar meter aqui el inicio, el establecimiento de id etc. 
+    /*
+
+    public boolean inicioSesion() {
+
+        String correoInicio = null;
+        String passwordInicio = null;
+        int contadorDeVecesCorreo = 0;
+        int contadorDeVecesPass = 3;
+        String clienteActual = null;
+
+        do {
+            System.out.println("Introduce tu correo electronico");
+            correoInicio = sc.next();
+            //clienteRepository.correoExisteDB(correoInicio);
+            if (!correoExisteDB(correoInicio)) {
+                System.out.println("El correo introducido contiene errores, o no está registrado");
+                contadorDeVecesCorreo++;
+                if (contadorDeVecesCorreo == 3) {
+                    System.out.println("Ya has intentado 3 veces el correo, y no existe o esta mal escrito, por favor REGISTRESE:");
+                    registrarClienteNuevo();
+                    return false;
+                }
+            } else {
+                System.out.println("El correo es correcto");
+                break;
+            }
+
+        } while (contadorDeVecesCorreo < 3);
+
+
+        if (correoExisteDB(correoInicio)) {
+
+            do {
+
+                System.out.println("Introduce tu password");
+                passwordInicio = sc.next();
+                if (verificarPasswordParaInicio(correoInicio, passwordInicio)) {
+                    clienteActual = correoInicio;
+                    System.out.println("🏪Correo y contraseña correctos, Inicio de Sesión Exitoso para 🏪"+clienteActual);
+
+                    return true;
+                } else {
+                    contadorDeVecesPass--;
+                    System.err.println("El password no coincide con la base de datos");
+                    System.out.println("Te quedan " + contadorDeVecesPass + " intentos");
+                }
+            } while (contadorDeVecesPass > 0 || !verificarPasswordParaInicio(correoInicio, passwordInicio));
+
+
+        }
+        return false;
+    }*/
+
+    public int idClienteActual(String clienteActual){
+        int idClienteActual=0;
+        connection=DBConnection.getConnection();
+
+        Statement statement = null;
+        ResultSet resultSet = null;
+        String query =String.format("SELECT %s FROM %s WHERE %s = %s;",
+                EsquemaDB.COL_ID_CLIENTE, EsquemaDB.TAB_CLIENTES, EsquemaDB.COL_CORREO, clienteActual) ;
+
+        DBConnection.closeConnection();
+        connection=null;
+
+        return idClienteActual;
+
     }
 
 
