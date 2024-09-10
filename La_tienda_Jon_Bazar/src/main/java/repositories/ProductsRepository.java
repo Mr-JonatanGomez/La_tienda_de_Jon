@@ -702,7 +702,9 @@ public class ProductsRepository {
     }
 
     public void addCarrito(){
-        //
+        System.out.println("Que producto quieres agregar al carrito");
+        Scanner sc = new Scanner(System.in);
+
     }
 
 

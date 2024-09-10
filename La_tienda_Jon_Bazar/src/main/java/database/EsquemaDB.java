@@ -9,6 +9,7 @@ public interface EsquemaDB {
     String TAB_PEDIDOS = "pedidos";
     String TAB_PRODUCTOS = "productos";
     String TAB_DETALLES = "detalles_pedido";
+    String TAB_CARRITO = "carrito";
     String COL_ID_CLIENTE = "id_cliente";
     String COL_NOMBRE = "nombre";
     String COL_CORREO = "correo";
@@ -25,5 +26,6 @@ public interface EsquemaDB {
         String COL_CANTIDAD = "cantidad";
         String COL_PRECIO_UNITARIO = "precio_unitario";
         String COL_SUBTOTAL = "subtotal";
+        String COL_ID_CARRITO = "id_carrito";
 
 }

@@ -99,6 +99,7 @@ public class Menu_Inicio_App {
                 resultSet = statement.executeQuery(query);
 
                 if (resultSet.next()){
+                    /* Si el inicio fue correcto, seleccionamos todo donde el correo sea igual al clienteActual*/
                     idClienteActual = resultSet.getInt("id_cliente");
 
 
@@ -260,7 +261,7 @@ public class Menu_Inicio_App {
                     // TODO: 23/08/2024 añadir si cat no existe...
                     break;
                 case 3:
-                    pedidoRepository.addProductCarrito();
+                    pedidoRepository.addProductCarrito(idClienteActual);
                     break;
                 case 0:
                     System.out.println("GURDANDO CARRITO, CERRANDO SESION Y SALIENDO AL MENÚ PRINCIPAL ");

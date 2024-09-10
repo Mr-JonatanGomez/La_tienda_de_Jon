@@ -120,14 +120,6 @@ public class ClienteRepository {
                         password=hashPassword(password);
                     }
 
-                    //cifradoPassword(passwordSinCifrar);
-                    /*
-                        CIFRADO CHANO
-                           for (int i = 0; i < passwordSinCifrar.length(); i++) {
-                           password += passwordSinCifrar.charAt(i)*claveCifrado;
-                        }
-                    */
-
 
                 } catch (TipoPasswordIcorrecto e) {
                     System.err.println(e.getMessage());
@@ -144,7 +136,6 @@ public class ClienteRepository {
                         EsquemaDB.TAB_CLIENTES,
                         EsquemaDB.COL_NOMBRE, EsquemaDB.COL_CORREO, EsquemaDB.COL_PASSWORD,
                         nombre, correo, password);
-                //IMPORTANTE meterle comillas a las banderas
 
                 // para sacar filas afectadas se crea la variable, la QUERY se ejecuta al mismo tiempo que se guarda
                 int filasAfectadas = statement.executeUpdate(query);
@@ -239,7 +230,7 @@ public class ClienteRepository {
     }
 
 
-    // TODO: 30/08/2024 intentar meter aqui el inicio, el establecimiento de id etc. 
+    // TODO: 30/08/2024 intentar meter aqui (ClienteRepo) el inicio, el establecimiento de id etc.
     /*
 
     public boolean inicioSesion() {
