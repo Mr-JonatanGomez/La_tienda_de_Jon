@@ -139,10 +139,27 @@ public class PedidoRepository {
             }
         }
     }
-    public void confirmarPedido(){
-        //necesito sacar el idClienteActual, que el idPedido se establezca automatico
+    public void readCarrito(int idCliente){
+        connection=DBConnection.getConnection();
 
-        //y para detalles pedido, agregar todos los productos, con el idPedido anterior y un idDetalle automatico
-        //que eso si esta bien diseñado en la database
+        Statement statement = null;
+        ResultSet resultSet = null;
+//hacer 2 querys, una para leer y la otra que calcule el precio, para que cliente lo sepa
+        String query = String.format("SELECT %s,%s, FROM %s WHERE %s = %s",EsquemaDB.TAB);
+
+        DBConnection.closeConnection();
+        connection=null;
+    }
+    public void confirmarPedido(int idClienteActual){
+        //primero leemos su carrito, para cerciorarnos que es correcto.
+        /*
+         Problemas, que pueden aparecer y hay que solucionar:
+            1- cuando vas a confirmar compra, que el producto no tenga stock porque otro cliente lo compró primero
+            1S- Para ello comrpobamos el carrito, si algo no tiene stock suficiente:
+                    a) otorgarle el maximo disponible
+                    b) cancelar el producto definitivamente y seguir
+                    c) cancelar carrito completo
+                IF (A||B) proseguir compra - ELSE delete carrito where idCliente...
+         */
     }
 }
