@@ -13,10 +13,9 @@ import java.util.Scanner;
 public class PedidoRepository {
     private Connection connection;
 
-   private double precio;
+    private double precio;
 
-    ProductsRepository productsRepository=new ProductsRepository();
-
+    ProductsRepository productsRepository = new ProductsRepository();
 
 
     public int stockAvailable(int idProducto) {
@@ -29,7 +28,7 @@ public class PedidoRepository {
                         "FROM %s " +
                         "WHERE %s = %s"
 
-                , EsquemaDB.COL_ID_PRODUCTO, EsquemaDB.COL_NOMBRE, EsquemaDB.COL_STOCK,EsquemaDB.COL_PRECIO,
+                , EsquemaDB.COL_ID_PRODUCTO, EsquemaDB.COL_NOMBRE, EsquemaDB.COL_STOCK, EsquemaDB.COL_PRECIO,
                 EsquemaDB.TAB_PRODUCTOS,
                 EsquemaDB.COL_ID_PRODUCTO, idProducto);
 
@@ -45,7 +44,7 @@ public class PedidoRepository {
 
 
                 System.out.println("El stockage ACTUAL de:\n" +
-                        "ID: " + id + ", " + name + ", es de " + stock + " unidades en TOTAL, con un precio unitario de: "+precio);
+                        "ID: " + id + ", " + name + ", es de " + stock + " unidades en TOTAL, con un precio unitario de: " + precio);
             } else {
                 System.out.println(" No se encontró producto con este ID");
             }
@@ -60,51 +59,53 @@ public class PedidoRepository {
 
         return stock;
     }
-    public void addProductCarrito(int idClienteActual){
+
+    public void addProductCarrito(int idClienteActual) {
 
         System.out.println("Introduce el ID del producto que quieres agregar al carrito");
         Scanner sc = new Scanner(System.in);
-        int idProducto= sc.nextInt();
+        int idProducto = sc.nextInt();
         // AQUI NECESITO SACAR EL idClienteActual establecido en Menu_Inicio_App
         boolean existeProducto = false;
         int cantidadDisponible;
 
 
-        if (productsRepository.verificarSiUnIDExisteDatabase(idProducto)){
+        if (productsRepository.verificarSiUnIDExisteDatabase(idProducto)) {
             existeProducto = true;
-        }else{
+        } else {
             System.out.println("El producto elegido no existe");
         }
 
-        cantidadDisponible=stockAvailable(idProducto);
+        cantidadDisponible = stockAvailable(idProducto);
         // TODO: 27/08/2024 solo igualar cantidad Disponible hecha, sin el CRUD de agregar
         //para que no de cruce de conexion lo realizo por separado, podria meterse dentro del if pero me da fallos de conex.
 
-        if (existeProducto){
+        if (existeProducto) {
             int cantidad;
             do {
-            System.out.println("Cuanta cantidad de producto quieres, si introduces 0, volverás atrás");
-            cantidad= sc.nextInt();
+                System.out.println("Cuanta cantidad de producto quieres, si introduces 0, volverás atrás");
+                cantidad = sc.nextInt();
 
-            if (cantidad<=cantidadDisponible && cantidad>0){
-                double subtotal = cantidad*precio;
+                if (cantidad <= cantidadDisponible && cantidad > 0) {
+                    double subtotal = cantidad * precio;
 
-                //insertToCarrito(idClienteActual,idProducto,cantidad,precio,subtotal);
-                insertToCarrito(idClienteActual,idProducto,cantidad,precio);
-                System.out.println("La cantidad se agregó PROBANDO, en ningun lugar");
+                    //insertToCarrito(idClienteActual,idProducto,cantidad,precio,subtotal);
+                    insertToCarrito(idClienteActual, idProducto, cantidad, precio);
+                    System.out.println("La cantidad se agregó PROBANDO, en ningun lugar");
 //luego poner precio a 0 para el siguiente por si acaso
 
-            } else if (cantidad==0) {
-                System.out.println("Te has arrepentido y no quieres el producto");
+                } else if (cantidad == 0) {
+                    System.out.println("Te has arrepentido y no quieres el producto");
 
-            } else{
-                System.out.println("Lo siento, el stock máximo disponible es de "+cantidadDisponible);
-            }
+                } else {
+                    System.out.println("Lo siento, el stock máximo disponible es de " + cantidadDisponible);
+                }
 
 
-            }while(cantidad > cantidadDisponible);
+            } while (cantidad > cantidadDisponible);
         }
     }
+
     public void insertToCarrito(int idCliente, int idProd, int cantidad, double precio) {
         connection = DBConnection.getConnection();
         PreparedStatement preparedStatement = null;
@@ -126,7 +127,6 @@ public class PedidoRepository {
             preparedStatement.setDouble(4, precio);
 
 
-
             preparedStatement.executeUpdate();
             System.out.println("Producto agregado correctamente al carrito.");
         } catch (SQLException e) {
@@ -140,12 +140,13 @@ public class PedidoRepository {
             }
         }
     }
-    public void readCarrito(int idCliente){
-        connection=DBConnection.getConnection();
+
+    public void readCarrito(int idCliente) {
+        connection = DBConnection.getConnection();
 
         Statement statement = null;
         ResultSet resultSet = null;
-        double precioFinal=0;
+        double precioFinal = 0;
 
 //hacer 2 querys, una para leer y la otra que calcule el precio, para que cliente lo sepa
 
@@ -158,43 +159,47 @@ public class PedidoRepository {
             ORDER BY carrito.id_producto ASC;
         */
         String queryRead = String.format("SELECT carrito.id_producto, productos.nombre, carrito.cantidad, carrito.subtotal\n" +
-                "            FROM %s\n" +
-                "            LEFT JOIN %s USING(%s)\n" +
-                "            WHERE carrito.id_cliente = %s\n" +
-                "            GROUP BY carrito.id_producto, productos.nombre, carrito.cantidad, carrito.subtotal\n" +
-                "            ORDER BY carrito.id_producto ASC;",
+                        "            FROM %s\n" +
+                        "            LEFT JOIN %s USING(%s)\n" +
+                        "            WHERE carrito.id_cliente = %s\n" +
+                        "            GROUP BY carrito.id_producto, productos.nombre, carrito.cantidad, carrito.subtotal\n" +
+                        "            ORDER BY carrito.id_producto ASC;",
                 EsquemaDB.TAB_CARRITO,
                 EsquemaDB.TAB_PRODUCTOS, EsquemaDB.COL_ID_PRODUCTO,
                 idCliente);
 
 
         try {
-            resultSet=statement.executeQuery(queryRead);
-            while(resultSet.next()){
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(queryRead);
+            while (resultSet.next()) {
                 int id = resultSet.getInt("id_producto");
                 String nombre = resultSet.getString("nombre");
                 int cantidad = resultSet.getInt("cantidad");
                 double subtotal = resultSet.getDouble("subtotal");
 
 
-                System.out.println("idProducto: "+id+"; "+nombre+", "+cantidad+" uds; PRECIO ->"+subtotal);
-                System.out.println();
+                System.out.println("idProducto: " + id + "; " + nombre + ", " + cantidad + " uds; PRECIO ->" + subtotal);
             }
-
+            System.out.println();
         } catch (SQLException e) {
             System.out.println("Error de Lectura o suma del carrito SQL");
             e.printStackTrace();
+        } finally {
+            DBConnection.closeConnection();
+            connection = null;
         }
 
-        DBConnection.closeConnection();
-        connection=null;
+        System.out.println("El precio final de su pedido es:"+ sumaCarrito(idCliente)+"\n");
+
     }
-    public double sumaCarrito(int idCliente){
-        connection=DBConnection.getConnection();
+
+    public double sumaCarrito(int idCliente) {
+        connection = DBConnection.getConnection();
 
         Statement statement = null;
         ResultSet resultSet = null;
-        double precioFinal=0;
+        double precioFinal = 0;
 
         /*      SUM QUERY
             SELECT SUM(subtotal) AS precioFinal
@@ -202,24 +207,34 @@ public class PedidoRepository {
             WHERE id_cliente = idClienteActual;
         */
 
-        String querySUM= String.format("SELECT SUM(%s) AS precioFinal" +
-                        "FROM %s" +
-                        "WHERE %s = %s",
+        String querySUM = String.format("SELECT SUM(%s) AS precioFinalTotal " +
+                        "FROM %s " +
+                        "WHERE %s = %d;",
                 EsquemaDB.COL_SUBTOTAL, EsquemaDB.TAB_CARRITO, EsquemaDB.COL_ID_CLIENTE, idCliente);
 
 
         try {
-            resultSet=statement.executeQuery(querySUM);
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(querySUM);
+
+            if (resultSet.next()) {
+                precioFinal = resultSet.getDouble("precioFinalTotal");
+
+            }
         } catch (SQLException e) {
             System.out.println("Error de Lectura o suma del carrito SQL");
             e.printStackTrace();
-        }
+        }finally {
 
-        DBConnection.closeConnection();
-        connection=null;
-        return 0;
+            DBConnection.closeConnection();
+            connection = null;
+
+        }
+        return precioFinal;
+
     }
-    public void confirmarPedido(int idClienteActual){
+
+    public void confirmarPedido(int idClienteActual) {
         //primero leemos su carrito, para cerciorarnos que es correcto.
         /*
          Problemas, que pueden aparecer y hay que solucionar:

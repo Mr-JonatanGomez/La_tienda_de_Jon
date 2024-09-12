@@ -263,6 +263,14 @@ public class Menu_Inicio_App {
                 case 3:
                     pedidoRepository.addProductCarrito(idClienteActual);
                     break;
+                case 4:
+                    System.out.println("PENDIENTE");
+                    break;
+                case 5:
+                    pedidoRepository.readCarrito(idClienteActual);
+                    //pedidoRepository.sumaCarrito(idClienteActual);
+                    //System.out.println(pedidoRepository.sumaCarrito(idClienteActual));
+                    break;
                 case 0:
                     System.out.println("GURDANDO CARRITO, CERRANDO SESION Y SALIENDO AL MENÚ PRINCIPAL ");
                     clienteActual = null;
