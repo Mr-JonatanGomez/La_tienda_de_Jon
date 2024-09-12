@@ -3,6 +3,7 @@ package repositories;
 import database.DBConnection;
 import database.EsquemaDB;
 import menu.Menu_Inicio_App;
+import model.Producto;
 
 import java.net.URL;
 import java.sql.*;
@@ -144,11 +145,79 @@ public class PedidoRepository {
 
         Statement statement = null;
         ResultSet resultSet = null;
+        double precioFinal=0;
+
 //hacer 2 querys, una para leer y la otra que calcule el precio, para que cliente lo sepa
-        String query = String.format("SELECT %s,%s, FROM %s WHERE %s = %s",EsquemaDB.TAB);
+
+        /*      READ QUERY
+            SELECT carrito.id_producto, productos.nombre, carrito.cantidad, carrito.subtotal
+            FROM carrito
+            LEFT JOIN productos USING(id_producto)
+            WHERE carrito.id_cliente = idClienteActual
+            GROUP BY carrito.id_producto, productos.nombre, carrito.cantidad, carrito.subtotal
+            ORDER BY carrito.id_producto ASC;
+        */
+        String queryRead = String.format("SELECT carrito.id_producto, productos.nombre, carrito.cantidad, carrito.subtotal\n" +
+                "            FROM %s\n" +
+                "            LEFT JOIN %s USING(%s)\n" +
+                "            WHERE carrito.id_cliente = %s\n" +
+                "            GROUP BY carrito.id_producto, productos.nombre, carrito.cantidad, carrito.subtotal\n" +
+                "            ORDER BY carrito.id_producto ASC;",
+                EsquemaDB.TAB_CARRITO,
+                EsquemaDB.TAB_PRODUCTOS, EsquemaDB.COL_ID_PRODUCTO,
+                idCliente);
+
+
+        try {
+            resultSet=statement.executeQuery(queryRead);
+            while(resultSet.next()){
+                int id = resultSet.getInt("id_producto");
+                String nombre = resultSet.getString("nombre");
+                int cantidad = resultSet.getInt("cantidad");
+                double subtotal = resultSet.getDouble("subtotal");
+
+
+                System.out.println("idProducto: "+id+"; "+nombre+", "+cantidad+" uds; PRECIO ->"+subtotal);
+                System.out.println();
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error de Lectura o suma del carrito SQL");
+            e.printStackTrace();
+        }
 
         DBConnection.closeConnection();
         connection=null;
+    }
+    public double sumaCarrito(int idCliente){
+        connection=DBConnection.getConnection();
+
+        Statement statement = null;
+        ResultSet resultSet = null;
+        double precioFinal=0;
+
+        /*      SUM QUERY
+            SELECT SUM(subtotal) AS precioFinal
+            FROM carrito
+            WHERE id_cliente = idClienteActual;
+        */
+
+        String querySUM= String.format("SELECT SUM(%s) AS precioFinal" +
+                        "FROM %s" +
+                        "WHERE %s = %s",
+                EsquemaDB.COL_SUBTOTAL, EsquemaDB.TAB_CARRITO, EsquemaDB.COL_ID_CLIENTE, idCliente);
+
+
+        try {
+            resultSet=statement.executeQuery(querySUM);
+        } catch (SQLException e) {
+            System.out.println("Error de Lectura o suma del carrito SQL");
+            e.printStackTrace();
+        }
+
+        DBConnection.closeConnection();
+        connection=null;
+        return 0;
     }
     public void confirmarPedido(int idClienteActual){
         //primero leemos su carrito, para cerciorarnos que es correcto.
@@ -161,5 +230,8 @@ public class PedidoRepository {
                     c) cancelar carrito completo
                 IF (A||B) proseguir compra - ELSE delete carrito where idCliente...
          */
+
+        readCarrito(idClienteActual);
+        sumaCarrito(idClienteActual);
     }
 }
