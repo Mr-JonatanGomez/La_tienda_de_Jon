@@ -195,6 +195,7 @@ public class PedidoRepository {
     }
 
     public double sumaCarrito(int idCliente) {
+        //devuelve el total del precio, para poder incrustarlo luego en el insert al pedido
         connection = DBConnection.getConnection();
 
         Statement statement = null;
@@ -239,14 +240,15 @@ public class PedidoRepository {
         /*
          Problemas, que pueden aparecer y hay que solucionar:
             1- cuando vas a confirmar compra, que el producto no tenga stock porque otro cliente lo compró primero
-            1S- Para ello comrpobamos el carrito, si algo no tiene stock suficiente:
-                    a) otorgarle el maximo disponible
-                    b) cancelar el producto definitivamente y seguir
+            1S- Para ello comrpobamos el carrito, si algo no tiene stock suficiente: (if-stock<carrito)
+                    a) otorgarle el maximo disponible (cantidad=stock)
+                    b) cancelar el producto definitivamente y seguir (cantidad=0)
                     c) cancelar carrito completo
-                IF (A||B) proseguir compra - ELSE delete carrito where idCliente...
+                IF (A||B) proseguir compra y hacer UPDATE con un while- ELSE (C) delete carrito where idCliente...
          */
 
         readCarrito(idClienteActual);
+
         sumaCarrito(idClienteActual);
     }
 }
